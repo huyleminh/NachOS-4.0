@@ -178,6 +178,14 @@ PrintString:
 	j	$31
 	.end PrintString
 
+	.globl Help
+	.ent	Help
+Help:
+	addiu $2,$0,SC_Help
+	syscall
+	j	$31
+	.end Help
+
 	.globl Close
 	.ent	Close
 Close:

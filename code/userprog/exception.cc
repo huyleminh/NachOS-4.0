@@ -556,6 +556,23 @@ void ExceptionHandler(ExceptionType which)
 			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
 			return;
 		}
+		case SC_Help:
+		{
+			DEBUG(dbgFile, "\nHelp");
+
+			{
+				/* set previous program counter (debugging only)*/
+				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+				/* set program counter to next instruction (all Instructions are 4 byte wide)*/
+				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+				/* set next program counter for brach execution */
+				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			}
+
+			return;
+		}
 		default:
 			cerr << "Unexpected system call " << type << "\n";
 			break;
