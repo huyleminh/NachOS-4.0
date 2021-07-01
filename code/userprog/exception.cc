@@ -236,7 +236,7 @@ void ExceptionHandler(ExceptionType which)
 			delete filename;
 			break;
 		}
-		case SC_ReadInt:
+		case SC_ReadNum:
 		{
 			char *buffer;
 			int MAX_BUFFER = 11;
@@ -358,7 +358,7 @@ void ExceptionHandler(ExceptionType which)
 			delete buffer;
 			return;
 		}
-		case SC_PrintInt:
+		case SC_PrintNum:
 		{
 			return;
 		}

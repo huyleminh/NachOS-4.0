@@ -34,8 +34,8 @@
 #define SC_ExecV	13
 #define SC_ThreadExit   14
 #define SC_ThreadJoin   15
-#define SC_ReadInt  16
-#define SC_PrintInt 17
+#define SC_ReadNum  16
+#define SC_PrintNum 17
 #define SC_Add		42
 
 #ifndef IN_ASM
@@ -175,7 +175,7 @@ int ThreadJoin(ThreadId id);
  */
 void ThreadExit(int ExitCode);
 
-int ReadInt();
+int ReadNum();
 
 #endif /* IN_ASM */
 
