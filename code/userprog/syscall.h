@@ -185,6 +185,7 @@ int ThreadJoin(ThreadId id);
 void ThreadExit(int ExitCode);
 
 int ReadNum();
+void PrintNum(int num);
 
 char ReadChar();
 void PrintChar(char ch);

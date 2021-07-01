@@ -239,7 +239,7 @@ void ExceptionHandler(ExceptionType which)
 			break;
 		}
 		case SC_ReadString:
-		{		
+		{
 			DEBUG(dbgFile, "\nSC_ReadString");
 
 			DEBUG(dbgFile, "\nReading virtual address of buffer data");
@@ -249,7 +249,7 @@ void ExceptionHandler(ExceptionType which)
 			int length = kernel->machine->ReadRegister(5); // second argument
 
 			// copy string from user space to system space
-			char* buffer = User2System(virtAddr, length + 1);
+			char *buffer = User2System(virtAddr, length + 1);
 
 			// Read string into buffer.
 			int realLength = kernel->synchConsoleIn->Read(buffer, length);
@@ -286,11 +286,11 @@ void ExceptionHandler(ExceptionType which)
 
 			// copy string from user space to system space
 			// 255 is max number of characters in char[]
-			char* buffer = User2System(virtAddr, MAX_CHAR_ARRAY + 1);
-			
+			char *buffer = User2System(virtAddr, MAX_CHAR_ARRAY + 1);
+
 			// print the string on the screen
 			kernel->synchConsoleOut->Print(buffer);
-			
+
 			delete buffer;
 
 			{
@@ -308,7 +308,6 @@ void ExceptionHandler(ExceptionType which)
 			// ASSERTNOTREACHED();
 			// break;
 		}
-
 
 		case SC_ReadChar:
 		{
@@ -377,16 +376,17 @@ void ExceptionHandler(ExceptionType which)
 						if (buffer[1] == '2')
 						{
 							for (int i = 2; i < temp; i++)
-							if (buffer[i] != '0')
-							{
-								overflowFlag = true;
-								break;
-							}
+								if (buffer[i] != '0')
+								{
+									overflowFlag = true;
+									break;
+								}
 						}
 						else if (buffer[1] > '2')
-								overflowFlag = true;
+							overflowFlag = true;
 					}
-					else overflowFlag = true;
+					else
+						overflowFlag = true;
 				}
 				else if (temp > MAX_BUFFER)
 					overflowFlag = true;
@@ -484,6 +484,76 @@ void ExceptionHandler(ExceptionType which)
 		}
 		case SC_PrintNum:
 		{
+			int number = kernel->machine->ReadRegister(4);
+			if (number == 0)
+			{
+				kernel->synchConsoleOut->PutChar('0');
+				/* set previous programm counter (debugging only)*/
+				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+				/* set next programm counter for brach execution */
+				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+				return;
+			}
+
+			bool isNegative = false;
+			int numberOfNum = 0; //number of digits
+			int firstNumIndex = 0;
+
+			//check negative for output
+			if (number < 0)
+			{
+				isNegative = true;
+				number = number * -1;
+				firstNumIndex = 1;
+			}
+
+			//count number of digits
+			int temp = number;
+			while (temp != 0)
+			{
+				numberOfNum++;
+				temp /= 10;
+			}
+
+			char *buffer;
+			int MAX_BUFFER = 11;
+			buffer = new char[MAX_BUFFER + 1];
+			for (int i = firstNumIndex + numberOfNum - 1; i >= firstNumIndex; i--)
+			{
+				buffer[i] = (char)((number % 10) + 48);
+				number /= 10;
+			}
+			if (isNegative)
+			{
+				buffer[0] = '-';
+				for (int i = 0; i <= numberOfNum; i++)
+				{
+					kernel->synchConsoleOut->PutChar(buffer[i]);
+				}
+				kernel->synchConsoleOut->PutChar('\n');
+				delete buffer;
+				/* set previous programm counter (debugging only)*/
+				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+				/* set next programm counter for brach execution */
+				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+				return;
+			}
+			for (int i = 0; i < numberOfNum; i++)
+			{
+				kernel->synchConsoleOut->PutChar(buffer[i]);
+			}
+			kernel->synchConsoleOut->PutChar('\n');
+			delete buffer;
+			/* set previous programm counter (debugging only)*/
+			kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+			/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			/* set next programm counter for brach execution */
+			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
 			return;
 		}
 		default:

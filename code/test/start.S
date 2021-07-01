@@ -66,6 +66,14 @@ ReadNum:
 	j 	$31
 	.end ReadNum
 
+	.globl PrintNum
+	.ent	PrintNum
+PrintNum:
+	addiu $2,$0,SC_PrintNum
+	syscall
+	j 	$31
+	.end PrintNum
+
 	.globl Exit
 	.ent	Exit
 Exit:
