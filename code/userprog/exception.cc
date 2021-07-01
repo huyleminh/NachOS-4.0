@@ -22,9 +22,12 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
+#include "synchconsole.h"
 #include "main.h"
 #include "syscall.h"
 #include "ksyscall.h"
+
+#define MAX_CHAR 2
 
 char *User2System(int virtAddr, int limit)
 {
@@ -192,9 +195,9 @@ void ExceptionHandler(ExceptionType which)
 			if (id >= 0 && id <= 14)
 			{
 				//FileSystem *fileSystem = new FileSystem();
-				if (kernel->fileSystem->Open((char*)id))
+				if (kernel->fileSystem->Open((char *)id))
 				{
-					delete kernel->fileSystem->Open((char*)id);
+					delete kernel->fileSystem->Open((char *)id);
 					//kernel->fileSystem->Open((char*)id) = NULL;
 					kernel->machine->WriteRegister(2, 0);
 					break;
@@ -236,6 +239,57 @@ void ExceptionHandler(ExceptionType which)
 			delete filename;
 			break;
 		}
+
+		case SC_ReadChar:
+		{
+			char *buffers = new char[MAX_CHAR + 1];
+
+			int i = 0;
+			while (true)
+			{
+				char inputCh = kernel->synchConsoleIn->GetChar();
+				buffers[i++] = inputCh;
+				if (inputCh == '\n')
+					break;
+				if (i == MAX_CHAR)
+					break;
+			}
+
+			//Put the first character into register
+			kernel->machine->WriteRegister(2, (int)buffers[0]);
+
+			{
+				/* set previous programm counter (debugging only)*/
+				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+				/* set next programm counter for brach execution */
+				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			}
+			delete buffers;
+			return;
+		}
+
+		case SC_PrintChar:
+		{
+			char ch = (char)kernel->machine->ReadRegister(4);
+			kernel->synchConsoleOut->PutChar(ch);
+
+			{
+				/* set previous programm counter (debugging only)*/
+				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+				/* set next programm counter for brach execution */
+				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			}
+			return;
+		}
+
 		default:
 			cerr << "Unexpected system call " << type << "\n";
 			break;
