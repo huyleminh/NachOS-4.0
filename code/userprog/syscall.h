@@ -34,7 +34,8 @@
 #define SC_ExecV	13
 #define SC_ThreadExit   14
 #define SC_ThreadJoin   15
-
+#define SC_ReadNum  16
+#define SC_PrintNum 17
 #define SC_Add		42
 
 //Add macro for print char and read char
@@ -176,7 +177,9 @@ int ThreadJoin(ThreadId id);
 /*
  * Deletes current thread and returns ExitCode to every waiting lokal thread.
  */
-void ThreadExit(int ExitCode);	
+void ThreadExit(int ExitCode);
+
+int ReadNum();
 
 char ReadChar();
 void PrintChar(char ch);
