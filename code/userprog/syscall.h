@@ -37,6 +37,10 @@
 
 #define SC_Add		42
 
+//Add macro for print char and read char
+#define SC_ReadChar     18
+#define SC_PrintChar    19
+
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -173,6 +177,9 @@ int ThreadJoin(ThreadId id);
  * Deletes current thread and returns ExitCode to every waiting lokal thread.
  */
 void ThreadExit(int ExitCode);	
+
+char ReadChar();
+void PrintChar(char ch);
 
 #endif /* IN_ASM */
 
