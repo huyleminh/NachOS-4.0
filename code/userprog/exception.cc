@@ -22,12 +22,14 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
+#include "synchconsole.h"
 #include "main.h"
 #include "synchconsole.h"
 #include "syscall.h"
 #include "ksyscall.h"
 
 #define MAX_CHAR_ARRAY 255
+#define MaxFileLength 32
 
 char *User2System(int virtAddr, int limit)
 {
@@ -188,16 +190,13 @@ void ExceptionHandler(ExceptionType which)
 		}
 		case SC_Close:
 		{
-
-			//Input: ID cua file (OpenFileID)
-			//Output: 0: thanh cong, -1: that bai
 			int id = kernel->machine->ReadRegister(4);
 			if (id >= 0 && id <= 14)
 			{
 				//FileSystem *fileSystem = new FileSystem();
-				if (kernel->fileSystem->Open((char*)id))
+				if (kernel->fileSystem->Open((char *)id))
 				{
-					delete kernel->fileSystem->Open((char*)id);
+					delete kernel->fileSystem->Open((char *)id);
 					//kernel->fileSystem->Open((char*)id) = NULL;
 					kernel->machine->WriteRegister(2, 0);
 					break;
@@ -210,25 +209,25 @@ void ExceptionHandler(ExceptionType which)
 		{
 			int virtAddr;
 			char *filename;
-			DEBUG(dbgFile, "\nSC_Create call...");
-			DEBUG(dbgFile, "\nReading virtual address of filename");
+			DEBUG(dbgSys, "\nSC_Create call...");
+			DEBUG(dbgSys, "\nReading virtual address of filename");
 			virtAddr = kernel->machine->ReadRegister(4);
-			DEBUG(dbgFile, "\nReading filename");
-			filename = User2System(virtAddr, 32 + 1); //max length = 32
+			DEBUG(dbgSys, "\nReading filename");
+			filename = User2System(virtAddr, MaxFileLength + 1); //max length = 32
 			if (strlen(filename) == 0)
 			{
-				DEBUG(dbgFile, "\nFile name is not valid");
+				DEBUG(dbgSys, "\nFile name is not valid");
 				kernel->machine->WriteRegister(2, -1);
 				break;
 			}
 			if (filename == NULL)
 			{
-				DEBUG(dbgFile, "\nNot enough memory in system");
+				DEBUG(dbgSys, "\nNot enough memory in system");
 				kernel->machine->WriteRegister(2, -1);
 				delete filename;
 				break;
 			}
-			DEBUG(dbgFile, "\nFinish reading filename.");
+			DEBUG(dbgSys, "\nFinish reading filename.");
 			if (!kernel->fileSystem->Create(filename, 0))
 			{
 				kernel->machine->WriteRegister(2, -1);
@@ -310,6 +309,183 @@ void ExceptionHandler(ExceptionType which)
 			// break;
 		}
 
+
+		case SC_ReadChar:
+		{
+			char *buffers = new char[MAX_CHAR_ARRAY + 1];
+
+			int i = 0;
+			while (true)
+			{
+				char inputCh = kernel->synchConsoleIn->GetChar();
+				buffers[i++] = inputCh;
+				if (inputCh == '\n')
+					break;
+				if (i == MAX_CHAR_ARRAY)
+					break;
+			}
+
+			//Put the first character into register
+			kernel->machine->WriteRegister(2, (int)buffers[0]);
+
+			{
+				/* set previous programm counter (debugging only)*/
+				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+				/* set next programm counter for brach execution */
+				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			}
+			delete buffers;
+			return;
+		}
+
+		case SC_PrintChar:
+		{
+			char ch = (char)kernel->machine->ReadRegister(4);
+			kernel->synchConsoleOut->PutChar(ch);
+
+			{
+				/* set previous programm counter (debugging only)*/
+				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+				/* set next programm counter for brach execution */
+				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			}
+			return;
+		}
+
+		case SC_ReadNum:
+		{
+			char *buffer;
+			int MAX_BUFFER = 11;
+			buffer = new char[MAX_BUFFER + 1];
+			bool overflowFlag = false;
+			int temp = 0;
+			while (true)
+			{
+				char numbytes = kernel->synchConsoleIn->GetChar();
+				if (temp == MAX_BUFFER)
+				{
+					if (buffer[0] == '-')
+					{
+						if (buffer[1] == '2')
+						{
+							for (int i = 2; i < temp; i++)
+							if (buffer[i] != '0')
+							{
+								overflowFlag = true;
+								break;
+							}
+						}
+						else if (buffer[1] > '2')
+								overflowFlag = true;
+					}
+					else overflowFlag = true;
+				}
+				else if (temp > MAX_BUFFER)
+					overflowFlag = true;
+				if (overflowFlag)
+				{
+					DEBUG(dbgSys, "\nOverflow");
+					kernel->machine->WriteRegister(2, 2000000001);
+					/* set previous programm counter (debugging only)*/
+					kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+					/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+					kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+					/* set next programm counter for brach execution */
+					kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+					delete buffer;
+					return;
+				}
+				if (numbytes == '\n')
+					break;
+				buffer[temp] = numbytes;
+				temp++;
+			}
+			int number = 0;
+
+			// check negative
+			bool isNegative = false;
+			int firstNumIndex = 0;
+			int lastNumIndex = 0;
+			if (buffer[0] == '-')
+			{
+				isNegative = true;
+				firstNumIndex = 1;
+				lastNumIndex = 1;
+			}
+
+			// check each char in array
+			for (int i = firstNumIndex; i < strlen(buffer); i++)
+			{
+				if (buffer[i] == '.') // accept xxx.00000 is integer
+				{
+					int j = i + 1;
+					for (; j < strlen(buffer); j++)
+					{
+						if (buffer[j] != '0')
+						{
+							DEBUG(dbgSys, "\nThe integer number is not valid");
+							kernel->machine->WriteRegister(2, 2000000001);
+							/* set previous programm counter (debugging only)*/
+							kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+							/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+							kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+							/* set next programm counter for brach execution */
+							kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+							delete buffer;
+							return;
+						}
+					}
+					lastNumIndex = i - 1;
+					break;
+				}
+				else if ((int)buffer[i] < 48 || (int)buffer[i] > 57)
+				{
+					DEBUG(dbgSys, "\nThe integer number is not valid");
+					kernel->machine->WriteRegister(2, 2000000001);
+					/* set previous programm counter (debugging only)*/
+					kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+					/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+					kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+					/* set next programm counter for brach execution */
+					kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+					delete buffer;
+					return;
+				}
+				lastNumIndex = i;
+			}
+
+			//convert to integer
+			for (int i = firstNumIndex; i <= lastNumIndex; i++)
+			{
+				number = number * 10 + (int)(buffer[i] - 48);
+			}
+			if (isNegative)
+			{
+				number = number * -1;
+			}
+
+			kernel->machine->WriteRegister(2, number);
+			/* set previous programm counter (debugging only)*/
+			kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+			/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			/* set next programm counter for brach execution */
+			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			delete buffer;
+			return;
+		}
+		case SC_PrintNum:
+		{
+			return;
+		}
 		default:
 			cerr << "Unexpected system call " << type << "\n";
 			break;

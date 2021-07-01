@@ -39,7 +39,13 @@
 #define SC_ReadString 20
 #define SC_PrintString 21
 
+#define SC_ReadNum  16
+#define SC_PrintNum 17
 #define SC_Add		42
+
+//Add macro for print char and read char
+#define SC_ReadChar     18
+#define SC_PrintChar    19
 
 #ifndef IN_ASM
 
@@ -176,7 +182,12 @@ int ThreadJoin(ThreadId id);
 /*
  * Deletes current thread and returns ExitCode to every waiting lokal thread.
  */
-void ThreadExit(int ExitCode);	
+void ThreadExit(int ExitCode);
+
+int ReadNum();
+
+char ReadChar();
+void PrintChar(char ch);
 
 void ReadString(char buffer[], int length);
 void PrintString(char buffer[]);
