@@ -23,8 +23,11 @@
 
 #include "copyright.h"
 #include "main.h"
+#include "synchconsole.h"
 #include "syscall.h"
 #include "ksyscall.h"
+
+#define MaxFileLength 32
 
 char *User2System(int virtAddr, int limit)
 {
@@ -185,9 +188,6 @@ void ExceptionHandler(ExceptionType which)
 		}
 		case SC_Close:
 		{
-
-			//Input: ID cua file (OpenFileID)
-			//Output: 0: thanh cong, -1: that bai
 			int id = kernel->machine->ReadRegister(4);
 			if (id >= 0 && id <= 14)
 			{
@@ -211,7 +211,7 @@ void ExceptionHandler(ExceptionType which)
 			DEBUG(dbgFile, "\nReading virtual address of filename");
 			virtAddr = kernel->machine->ReadRegister(4);
 			DEBUG(dbgFile, "\nReading filename");
-			filename = User2System(virtAddr, 32 + 1); //max length = 32
+			filename = User2System(virtAddr, MaxFileLength + 1); //max length = 32
 			if (strlen(filename) == 0)
 			{
 				DEBUG(dbgFile, "\nFile name is not valid");
