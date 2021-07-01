@@ -26,7 +26,9 @@ class SynchConsoleInput : public CallBackObj {
     ~SynchConsoleInput();		// Deallocate console device
 
     char GetChar();		// Read a character, waiting if necessary
-    
+
+    int Read(char* s, int length); 
+
   private:
     ConsoleInput *consoleInput;	// the hardware keyboard
     Lock *lock;			// only one reader at a time
@@ -41,6 +43,8 @@ class SynchConsoleOutput : public CallBackObj {
     ~SynchConsoleOutput();
 
     void PutChar(char ch);	// Write a character, waiting if necessary
+
+    void Print(char* s);
     
   private:
     ConsoleOutput *consoleOutput;// the hardware display

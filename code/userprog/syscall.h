@@ -27,6 +27,8 @@
 #define SC_Open		6
 #define SC_Read		7
 #define SC_Write	8
+#define SC_ReadString 20
+#define SC_WriteString 21
 #define SC_Seek         9
 #define SC_Close	10
 #define SC_ThreadFork	11
@@ -34,6 +36,9 @@
 #define SC_ExecV	13
 #define SC_ThreadExit   14
 #define SC_ThreadJoin   15
+#define SC_ReadString 20
+#define SC_PrintString 21
+
 #define SC_ReadNum  16
 #define SC_PrintNum 17
 #define SC_Add		42
@@ -183,6 +188,10 @@ int ReadNum();
 
 char ReadChar();
 void PrintChar(char ch);
+
+void ReadString(char buffer[], int length);
+void PrintString(char buffer[]);
+
 
 #endif /* IN_ASM */
 

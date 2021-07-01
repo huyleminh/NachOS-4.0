@@ -53,6 +53,35 @@ SynchConsoleInput::GetChar()
     return ch;
 }
 
+int SynchConsoleInput::Read(char* s, int length) {
+    int numBytesRead = 0;
+    char ch;
+
+    // set each byte in s is 0
+    memset(s, 0, length + 1);
+    
+    lock->Acquire();
+
+    while (numBytesRead < length) {
+        waitFor->P();
+        ch = consoleInput->GetChar();
+
+        if (ch == '\n' || ch == '\001')
+            break;
+        else {
+            s[numBytesRead] = ch;
+            numBytesRead++;
+        }
+    }
+
+    lock->Release();
+
+    if (ch == '\001')
+        return -1;
+
+    return numBytesRead;
+}
+
 //----------------------------------------------------------------------
 // SynchConsoleInput::CallBack
 //      Interrupt handler called when keystroke is hit; wake up
@@ -103,6 +132,19 @@ SynchConsoleOutput::PutChar(char ch)
     lock->Acquire();
     consoleOutput->PutChar(ch);
     waitFor->P();
+    lock->Release();
+}
+
+void SynchConsoleOutput::Print(char* s) {
+    lock->Acquire();
+
+    int i = 0;
+    while (s[i] != '\0') {
+        consoleOutput->PutChar(s[i]);
+        waitFor->P();
+        ++i;
+    } 
+
     lock->Release();
 }
 
