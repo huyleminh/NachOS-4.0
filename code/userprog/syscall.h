@@ -34,7 +34,8 @@
 #define SC_ExecV	13
 #define SC_ThreadExit   14
 #define SC_ThreadJoin   15
-
+#define SC_ReadInt  16
+#define SC_PrintInt 17
 #define SC_Add		42
 
 #ifndef IN_ASM
@@ -172,7 +173,9 @@ int ThreadJoin(ThreadId id);
 /*
  * Deletes current thread and returns ExitCode to every waiting lokal thread.
  */
-void ThreadExit(int ExitCode);	
+void ThreadExit(int ExitCode);
+
+int ReadInt();
 
 #endif /* IN_ASM */
 

@@ -58,6 +58,14 @@ Add:
 	j 	$31
 	.end Add
 
+	.globl ReadInt
+	.ent	ReadInt
+ReadInt:
+	addiu $2,$0,SC_ReadInt
+	syscall
+	j 	$31
+	.end ReadInt
+
 	.globl Exit
 	.ent	Exit
 Exit:
