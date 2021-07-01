@@ -27,7 +27,7 @@ class SynchConsoleInput : public CallBackObj {
 
     char GetChar();		// Read a character, waiting if necessary
 
-    int Read(char* into, int numBytes); 
+    int Read(char* s, int length); 
 
   private:
     ConsoleInput *consoleInput;	// the hardware keyboard
@@ -44,7 +44,7 @@ class SynchConsoleOutput : public CallBackObj {
 
     void PutChar(char ch);	// Write a character, waiting if necessary
 
-    void Print(char* from);
+    void Print(char* s);
     
   private:
     ConsoleOutput *consoleOutput;// the hardware display

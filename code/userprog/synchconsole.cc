@@ -53,23 +53,23 @@ SynchConsoleInput::GetChar()
     return ch;
 }
 
-int SynchConsoleInput::Read(char* into, int numBytes) {
+int SynchConsoleInput::Read(char* s, int length) {
     int numBytesRead = 0;
     char ch;
-    bool eolcond = FALSE;
 
-    memset(into, 0, numBytes + 1);
+    // set each byte in s is 0
+    memset(s, 0, length + 1);
     
     lock->Acquire();
 
-    while (numBytesRead < numBytes && eolcond == FALSE) {
+    while (numBytesRead < length) {
         waitFor->P();
         ch = consoleInput->GetChar();
 
         if (ch == '\n' || ch == '\001')
-            eolcond = TRUE;
+            break;
         else {
-            into[numBytesRead] = ch;
+            s[numBytesRead] = ch;
             numBytesRead++;
         }
     }
@@ -135,12 +135,12 @@ SynchConsoleOutput::PutChar(char ch)
     lock->Release();
 }
 
-void SynchConsoleOutput::Print(char* from) {
+void SynchConsoleOutput::Print(char* s) {
     lock->Acquire();
 
     int i = 0;
-    while (from[i] != '\0') {
-        consoleOutput->PutChar(from[i]);
+    while (s[i] != '\0') {
+        consoleOutput->PutChar(s[i]);
         waitFor->P();
         ++i;
     } 
