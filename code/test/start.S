@@ -130,6 +130,22 @@ Write:
 	j	$31
 	.end Write
 
+	.globl ReadString
+	.ent	ReadString
+ReadString:
+	addiu $2,$0,SC_ReadString
+	syscall
+	j	$31
+	.end ReadString
+
+	.globl PrintString
+	.ent	PrintString
+PrintString:
+	addiu $2,$0,SC_PrintString
+	syscall
+	j	$31
+	.end PrintString
+
 	.globl Close
 	.ent	Close
 Close:
