@@ -369,6 +369,7 @@ void ExceptionHandler(ExceptionType which)
 			while (true)
 			{
 				char numbytes = kernel->synchConsoleIn->GetChar();
+				
 				if (temp == MAX_BUFFER)
 				{
 					if (buffer[0] == '-')
@@ -408,6 +409,7 @@ void ExceptionHandler(ExceptionType which)
 				buffer[temp] = numbytes;
 				temp++;
 			}
+
 			int number = 0;
 
 			// check negative
@@ -422,12 +424,12 @@ void ExceptionHandler(ExceptionType which)
 			}
 
 			// check each char in array
-			for (int i = firstNumIndex; i < strlen(buffer); i++)
+			for (int i = firstNumIndex; i < temp; i++)
 			{
 				if (buffer[i] == '.') // accept xxx.00000 is integer
 				{
 					int j = i + 1;
-					for (; j < strlen(buffer); j++)
+					for (; j < temp; j++)
 					{
 						if (buffer[j] != '0')
 						{
@@ -446,7 +448,7 @@ void ExceptionHandler(ExceptionType which)
 					lastNumIndex = i - 1;
 					break;
 				}
-				else if ((int)buffer[i] < 48 || (int)buffer[i] > 57)
+				else if (buffer[i] < '0' || buffer[i] > '9')
 				{
 					DEBUG(dbgSys, "\nThe integer number is not valid");
 					kernel->machine->WriteRegister(2, 2000000001);
@@ -532,7 +534,6 @@ void ExceptionHandler(ExceptionType which)
 				{
 					kernel->synchConsoleOut->PutChar(buffer[i]);
 				}
-				kernel->synchConsoleOut->PutChar('\n');
 				delete buffer;
 				/* set previous programm counter (debugging only)*/
 				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
@@ -546,7 +547,6 @@ void ExceptionHandler(ExceptionType which)
 			{
 				kernel->synchConsoleOut->PutChar(buffer[i]);
 			}
-			kernel->synchConsoleOut->PutChar('\n');
 			delete buffer;
 			/* set previous programm counter (debugging only)*/
 			kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
