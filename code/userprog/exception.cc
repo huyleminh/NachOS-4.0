@@ -532,7 +532,7 @@ void ExceptionHandler(ExceptionType which)
 				{
 					kernel->synchConsoleOut->PutChar(buffer[i]);
 				}
-				kernel->synchConsoleOut->PutChar('\n');
+
 				delete buffer;
 				/* set previous programm counter (debugging only)*/
 				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
@@ -546,7 +546,7 @@ void ExceptionHandler(ExceptionType which)
 			{
 				kernel->synchConsoleOut->PutChar(buffer[i]);
 			}
-			kernel->synchConsoleOut->PutChar('\n');
+
 			delete buffer;
 			/* set previous programm counter (debugging only)*/
 			kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
