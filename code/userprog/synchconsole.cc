@@ -56,9 +56,6 @@ SynchConsoleInput::GetChar()
 int SynchConsoleInput::Read(char* s, int length) {
     int numBytesRead = 0;
     char ch;
-
-    // set each byte in s is 0
-    memset(s, 0, length + 1);
     
     lock->Acquire();
 
@@ -66,18 +63,15 @@ int SynchConsoleInput::Read(char* s, int length) {
         waitFor->P();
         ch = consoleInput->GetChar();
 
-        if (ch == '\n' || ch == '\001')
+        if (ch == '\n')
             break;
         else {
             s[numBytesRead] = ch;
-            numBytesRead++;
+            ++numBytesRead;
         }
     }
 
     lock->Release();
-
-    if (ch == '\001')
-        return -1;
 
     return numBytesRead;
 }
