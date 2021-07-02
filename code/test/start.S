@@ -178,13 +178,13 @@ PrintString:
 	j	$31
 	.end PrintString
 
-	.globl Help
-	.ent	Help
-Help:
-	addiu $2,$0,SC_Help
+	.globl RandomNum
+	.ent	RandomNum
+RandomNum:
+	addiu $2,$0,SC_RandomNum
 	syscall
 	j	$31
-	.end Help
+	.end RandomNum
 
 	.globl Close
 	.ent	Close

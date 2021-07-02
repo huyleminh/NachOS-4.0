@@ -27,6 +27,8 @@
 #include "synchconsole.h"
 #include "syscall.h"
 #include "ksyscall.h"
+#include <stdlib.h>
+#include <time.h>
 
 #define MAX_CHAR_ARRAY 255
 #define MaxFileLength 32
@@ -475,7 +477,7 @@ void ExceptionHandler(ExceptionType which)
 				{
 					kernel->synchConsoleOut->PutChar(buffer[i]);
 				}
-				kernel->synchConsoleOut->PutChar('\n');
+		
 				delete buffer;
 				
 				IncreasePC();
@@ -485,15 +487,34 @@ void ExceptionHandler(ExceptionType which)
 			{
 				kernel->synchConsoleOut->PutChar(buffer[i]);
 			}
-			kernel->synchConsoleOut->PutChar('\n');
 			delete buffer;
 			
 			IncreasePC();
 			return;
 		}
-		case SC_Help:
+		case SC_RandomNum:
 		{
-			DEBUG(dbgFile, "\nHelp");
+			srand(time(NULL));
+			int randomNumber = rand();
+			
+			int countDigits = 0;
+			int cloneRandomNumber = randomNumber;
+			while (cloneRandomNumber != 0) {
+				++countDigits;
+				cloneRandomNumber /= 10;
+			}
+
+			char* buffer = new char[countDigits + 1];
+			memset(buffer, 0, countDigits + 1);
+
+			cloneRandomNumber = randomNumber;
+			for (int i = countDigits - 1; i > -1; i--) {
+				buffer[i] = (cloneRandomNumber % 10) + '0';
+				cloneRandomNumber /= 10;
+			}
+
+			kernel->synchConsoleOut->Print(buffer);
+			delete[] buffer;
 
 			IncreasePC();
 			return;
