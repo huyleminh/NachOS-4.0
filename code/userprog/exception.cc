@@ -500,6 +500,7 @@ void ExceptionHandler(ExceptionType which)
 			srand(time(NULL));
 			int randomNumber = rand();
 			
+			// count the number of digits of random number.
 			int countDigits = 0;
 			int cloneRandomNumber = randomNumber;
 			while (cloneRandomNumber != 0) {
@@ -510,12 +511,14 @@ void ExceptionHandler(ExceptionType which)
 			char* buffer = new char[countDigits + 1];
 			memset(buffer, 0, countDigits + 1);
 
+			// copy each character of random number to char array.
 			cloneRandomNumber = randomNumber;
 			for (int i = countDigits - 1; i > -1; i--) {
 				buffer[i] = (cloneRandomNumber % 10) + '0';
 				cloneRandomNumber /= 10;
 			}
 
+			// print random number.
 			kernel->synchConsoleOut->Print(buffer);
 			delete[] buffer;
 
