@@ -487,6 +487,7 @@ void ExceptionHandler(ExceptionType which)
 			{
 				kernel->synchConsoleOut->PutChar(buffer[i]);
 			}
+
 			delete buffer;
 			
 			IncreasePC();
