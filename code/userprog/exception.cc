@@ -67,6 +67,17 @@ int System2User(int virtAddr, int length, char *buffer)
 	} while (i < length && oneChar != 0);
 	return i;
 }
+
+void IncreasePC() {
+	/* set previous program counter (debugging only)*/
+	kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+	/* set program counter to next instruction (all Instructions are 4 byte wide)*/
+	kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+	/* set next program counter for brach execution */
+	kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+}
 //----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
@@ -165,16 +176,7 @@ void ExceptionHandler(ExceptionType which)
 			/* Prepare Result */
 			kernel->machine->WriteRegister(2, (int)result);
 			/* Modify return point */
-			{
-				/* set previous program counter (debugging only)*/
-				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-				/* set program counter to next instruction (all Instructions are 4 byte wide)*/
-				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-
-				/* set next program counter for brach execution */
-				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
-			}
+			IncreasePC();
 			cout << "Result is " << result << endl;
 			return;
 			ASSERTNOTREACHED();
@@ -243,36 +245,24 @@ void ExceptionHandler(ExceptionType which)
 			DEBUG(dbgFile, "\nSC_ReadString");
 
 			DEBUG(dbgFile, "\nReading virtual address of buffer data");
-			int virtAddr = kernel->machine->ReadRegister(4); // first agrument
+			int addressBuffer = kernel->machine->ReadRegister(4); // first agrument
 
 			DEBUG(dbgFile, "\nReading length of string");
 			int length = kernel->machine->ReadRegister(5); // second argument
 
 			// copy string from user space to system space
-			char *buffer = User2System(virtAddr, length + 1);
+			char *kernelBuffer = User2System(addressBuffer, length);
 
 			// Read string into buffer.
-			int realLength = kernel->synchConsoleIn->Read(buffer, length);
-
-			// print the string already entered from the keyboard
-			kernel->synchConsoleOut->Print(buffer);
+			int realLength = kernel->synchConsoleIn->Read(kernelBuffer, length);
 
 			// copy string from system space to user space
-			System2User(virtAddr, realLength + 1, buffer);
+			System2User(addressBuffer, realLength + 1, kernelBuffer);
 
-			delete buffer;
+			delete[] kernelBuffer;
+			kernelBuffer = NULL;
 
-			{
-				/* set previous program counter (debugging only)*/
-				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-				/* set program counter to next instruction (all Instructions are 4 byte wide)*/
-				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-
-				/* set next program counter for brach execution */
-				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
-			}
-
+			IncreasePC();
 			return;
 			// ASSERTNOTREACHED();
 			// break;
@@ -286,24 +276,15 @@ void ExceptionHandler(ExceptionType which)
 
 			// copy string from user space to system space
 			// 255 is max number of characters in char[]
-			char *buffer = User2System(virtAddr, MAX_CHAR_ARRAY + 1);
+			char *kernelBuffer = User2System(virtAddr, MAX_CHAR_ARRAY);
 
 			// print the string on the screen
-			kernel->synchConsoleOut->Print(buffer);
+			kernel->synchConsoleOut->Print(kernelBuffer);
 
-			delete buffer;
+			delete[] kernelBuffer;
+			kernelBuffer = NULL;
 
-			{
-				/* set previous program counter (debugging only)*/
-				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-				/* set program counter to next instruction (all Instructions are 4 byte wide)*/
-				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-
-				/* set next program counter for brach execution */
-				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
-			}
-
+			IncreasePC();
 			return;
 			// ASSERTNOTREACHED();
 			// break;
@@ -326,18 +307,9 @@ void ExceptionHandler(ExceptionType which)
 
 			//Put the first character into register
 			kernel->machine->WriteRegister(2, (int)buffers[0]);
-
-			{
-				/* set previous programm counter (debugging only)*/
-				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-
-				/* set next programm counter for brach execution */
-				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
-			}
+			IncreasePC();
 			delete buffers;
+
 			return;
 		}
 
@@ -345,17 +317,8 @@ void ExceptionHandler(ExceptionType which)
 		{
 			char ch = (char)kernel->machine->ReadRegister(4);
 			kernel->synchConsoleOut->PutChar(ch);
+			IncreasePC();
 
-			{
-				/* set previous programm counter (debugging only)*/
-				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-
-				/* set next programm counter for brach execution */
-				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
-			}
 			return;
 		}
 
@@ -394,12 +357,8 @@ void ExceptionHandler(ExceptionType which)
 				{
 					DEBUG(dbgSys, "\nOverflow");
 					kernel->machine->WriteRegister(2, 2000000001);
-					/* set previous programm counter (debugging only)*/
-					kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-					/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-					kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-					/* set next programm counter for brach execution */
-					kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+					
+					IncreasePC();
 					delete buffer;
 					return;
 				}
@@ -433,12 +392,8 @@ void ExceptionHandler(ExceptionType which)
 						{
 							DEBUG(dbgSys, "\nThe integer number is not valid");
 							kernel->machine->WriteRegister(2, 2000000001);
-							/* set previous programm counter (debugging only)*/
-							kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-							/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-							kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-							/* set next programm counter for brach execution */
-							kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+							
+							IncreasePC();
 							delete buffer;
 							return;
 						}
@@ -450,12 +405,8 @@ void ExceptionHandler(ExceptionType which)
 				{
 					DEBUG(dbgSys, "\nThe integer number is not valid");
 					kernel->machine->WriteRegister(2, 2000000001);
-					/* set previous programm counter (debugging only)*/
-					kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-					/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-					kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-					/* set next programm counter for brach execution */
-					kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+					
+					IncreasePC();
 					delete buffer;
 					return;
 				}
@@ -473,12 +424,8 @@ void ExceptionHandler(ExceptionType which)
 			}
 
 			kernel->machine->WriteRegister(2, number);
-			/* set previous programm counter (debugging only)*/
-			kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-			/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-			/* set next programm counter for brach execution */
-			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			
+			IncreasePC();
 			delete buffer;
 			return;
 		}
@@ -488,12 +435,8 @@ void ExceptionHandler(ExceptionType which)
 			if (number == 0)
 			{
 				kernel->synchConsoleOut->PutChar('0');
-				/* set previous programm counter (debugging only)*/
-				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-				/* set next programm counter for brach execution */
-				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+				
+				IncreasePC();
 				return;
 			}
 
@@ -534,12 +477,8 @@ void ExceptionHandler(ExceptionType which)
 				}
 				kernel->synchConsoleOut->PutChar('\n');
 				delete buffer;
-				/* set previous programm counter (debugging only)*/
-				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-				/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-				/* set next programm counter for brach execution */
-				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+				
+				IncreasePC();
 				return;
 			}
 			for (int i = 0; i < numberOfNum; i++)
@@ -548,29 +487,15 @@ void ExceptionHandler(ExceptionType which)
 			}
 			kernel->synchConsoleOut->PutChar('\n');
 			delete buffer;
-			/* set previous programm counter (debugging only)*/
-			kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-			/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-			/* set next programm counter for brach execution */
-			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			
+			IncreasePC();
 			return;
 		}
 		case SC_Help:
 		{
 			DEBUG(dbgFile, "\nHelp");
 
-			{
-				/* set previous program counter (debugging only)*/
-				kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-				/* set program counter to next instruction (all Instructions are 4 byte wide)*/
-				kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-
-				/* set next program counter for brach execution */
-				kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
-			}
-
+			IncreasePC();
 			return;
 		}
 		default:
