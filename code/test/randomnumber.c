@@ -2,5 +2,6 @@
 
 int main() {
     RandomNum();
+    PrintChar('\n');
     Halt();
 }

@@ -31,12 +31,13 @@ void bubbleSort(int a[], int n, int(*sortOrder)(int, int)) {
 
 int main()
 {
-    int i, j, n;
+    int i, j, n, type;
 
     PrintString("Input number of elements (<= 100): ");
 
     n = ReadNum();
-    if (n > 100) {
+    if (n > 100 || n <= 0) {
+        PrintString("Invalid number of elements.\n");
         Halt();
     }
     PrintString("\n");
@@ -45,10 +46,33 @@ int main()
         PrintNum(i + 1);
         PrintString(": ");
         A[i] = ReadNum();
+
+        //2000000001 is the error case of system call SC_ReadNum
+        if (A[i] == 2000000001) {
+            PrintString("Invalid number.\n");
+            Halt();
+        }
         PrintString("\n");
     }
 
-    bubbleSort(A, n, sortAscending);
+    while (1) {
+        PrintString("Input type of sort order (1: ascending, 2: descending): ");
+        type = ReadNum();
+        PrintChar('\n');
+
+        //2000000001 is the error case of system call SC_ReadNum
+        if (type == 2000000001) {
+            PrintString("Invalid number.\n");
+            Halt();
+        }
+        if (type == 1 || type == 2)
+            break;
+    }
+
+    if (type == 1)
+        bubbleSort(A, n, sortAscending);
+    else
+        bubbleSort(A, n, sortDescending);
 
     for (j = 0; j < n; j++) {
         PrintNum(A[j]);
