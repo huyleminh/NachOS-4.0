@@ -127,6 +127,7 @@ halt: halt.o start.o
 	$(LD) $(LDFLAGS) start.o halt.o -o halt.coff
 	$(COFF2NOFF) halt.coff halt
 
+# These program below are used to test the system call
 teststring.o: teststring.c
 	$(CC) $(CFLAGS) -c teststring.c
 teststring: teststring.o start.o
@@ -162,11 +163,19 @@ randomnumber.o: randomnumber.c
 randomnumber: randomnumber.o start.o
 	$(LD) $(LDFLAGS) start.o randomnumber.o -o randomnumber.coff
 	$(COFF2NOFF) randomnumber.coff randomnumber
+
 ascii.o: ascii.c
 	$(CC) $(CFLAGS) -c ascii.c
 ascii: ascii.o start.o
 	$(LD) $(LDFLAGS) start.o ascii.o -o ascii.coff
 	$(COFF2NOFF) ascii.coff ascii
+
+	sort.o: sort.c
+	$(CC) $(CFLAGS) -c sort.c
+sort: sort.o start.o
+	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
+	$(COFF2NOFF) sort.coff sort
+# **************************************************************************
 
 add.o: add.c
 	$(CC) $(CFLAGS) -c add.c
@@ -180,12 +189,6 @@ shell.o: shell.c
 shell: shell.o start.o
 	$(LD) $(LDFLAGS) start.o shell.o -o shell.coff
 	$(COFF2NOFF) shell.coff shell
-
-sort.o: sort.c
-	$(CC) $(CFLAGS) -c sort.c
-sort: sort.o start.o
-	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
-	$(COFF2NOFF) sort.coff sort
 
 segments.o: segments.c
 	$(CC) $(CFLAGS) -c segments.c

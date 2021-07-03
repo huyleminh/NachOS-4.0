@@ -1,3 +1,5 @@
+//Test system call ReadNum and PrintNum
+
 #include "syscall.h"
 
 int main()

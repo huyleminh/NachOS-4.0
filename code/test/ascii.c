@@ -1,3 +1,6 @@
+//Ascii table program
+//Print all printable ascii character from 32 to 126
+
 #include "syscall.h"
 
 int main()

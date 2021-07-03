@@ -1,3 +1,5 @@
+//Test system call RandomNum
+
 #include "syscall.h"
 
 int main() {

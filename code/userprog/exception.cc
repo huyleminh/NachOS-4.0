@@ -70,7 +70,8 @@ int System2User(int virtAddr, int length, char *buffer)
 	return i;
 }
 
-void IncreasePC() {
+void IncreasePC()
+{
 	/* set previous program counter (debugging only)*/
 	kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 
@@ -242,6 +243,8 @@ void ExceptionHandler(ExceptionType which)
 			delete filename;
 			break;
 		}
+
+		//Start custom systemcall
 		case SC_ReadString:
 		{
 			DEBUG(dbgFile, "\nSC_ReadString");
@@ -294,6 +297,7 @@ void ExceptionHandler(ExceptionType which)
 
 		case SC_ReadChar:
 		{
+			//Array of buffers to save all input from user
 			char *buffers = new char[MAX_CHAR_ARRAY + 1];
 
 			int i = 0;
@@ -301,6 +305,8 @@ void ExceptionHandler(ExceptionType which)
 			{
 				char inputCh = kernel->synchConsoleIn->GetChar();
 				buffers[i++] = inputCh;
+
+				//In case user press Enter, break
 				if (inputCh == '\n')
 					break;
 				if (i == MAX_CHAR_ARRAY)
@@ -317,7 +323,10 @@ void ExceptionHandler(ExceptionType which)
 
 		case SC_PrintChar:
 		{
+			//Read the first argument
 			char ch = (char)kernel->machine->ReadRegister(4);
+
+			//Print to the console
 			kernel->synchConsoleOut->PutChar(ch);
 			IncreasePC();
 
@@ -334,7 +343,7 @@ void ExceptionHandler(ExceptionType which)
 			while (true)
 			{
 				char numbytes = kernel->synchConsoleIn->GetChar();
-				
+
 				if (temp == MAX_BUFFER)
 				{
 					if (buffer[0] == '-')
@@ -360,7 +369,7 @@ void ExceptionHandler(ExceptionType which)
 				{
 					DEBUG(dbgSys, "\nOverflow");
 					kernel->machine->WriteRegister(2, 2000000001);
-					
+
 					IncreasePC();
 					delete[] buffer;
 					return;
@@ -396,7 +405,7 @@ void ExceptionHandler(ExceptionType which)
 						{
 							DEBUG(dbgSys, "\nThe integer number is not valid");
 							kernel->machine->WriteRegister(2, 2000000001);
-							
+
 							IncreasePC();
 							delete[] buffer;
 							return;
@@ -409,7 +418,7 @@ void ExceptionHandler(ExceptionType which)
 				{
 					DEBUG(dbgSys, "\nThe integer number is not valid");
 					kernel->machine->WriteRegister(2, 2000000001);
-					
+
 					IncreasePC();
 					delete[] buffer;
 					return;
@@ -428,7 +437,7 @@ void ExceptionHandler(ExceptionType which)
 			}
 
 			kernel->machine->WriteRegister(2, number);
-			
+
 			IncreasePC();
 			delete[] buffer;
 			return;
@@ -439,7 +448,7 @@ void ExceptionHandler(ExceptionType which)
 			if (number == 0)
 			{
 				kernel->synchConsoleOut->PutChar('0');
-				
+
 				IncreasePC();
 				return;
 			}
@@ -481,7 +490,7 @@ void ExceptionHandler(ExceptionType which)
 				}
 
 				delete[] buffer;
-				
+
 				IncreasePC();
 				return;
 			}
@@ -491,29 +500,32 @@ void ExceptionHandler(ExceptionType which)
 			}
 
 			delete[] buffer;
-			
+
 			IncreasePC();
 			return;
 		}
+
 		case SC_RandomNum:
 		{
 			srand(time(NULL));
 			int randomNumber = rand();
-			
+
 			// count the number of digits of random number.
 			int countDigits = 0;
 			int cloneRandomNumber = randomNumber;
-			while (cloneRandomNumber != 0) {
+			while (cloneRandomNumber != 0)
+			{
 				++countDigits;
 				cloneRandomNumber /= 10;
 			}
 
-			char* buffer = new char[countDigits + 1];
+			char *buffer = new char[countDigits + 1];
 			memset(buffer, 0, countDigits + 1);
 
 			// copy each character of random number to char array.
 			cloneRandomNumber = randomNumber;
-			for (int i = countDigits - 1; i > -1; i--) {
+			for (int i = countDigits - 1; i > -1; i--)
+			{
 				buffer[i] = (cloneRandomNumber % 10) + '0';
 				cloneRandomNumber /= 10;
 			}
@@ -525,6 +537,9 @@ void ExceptionHandler(ExceptionType which)
 			IncreasePC();
 			return;
 		}
+
+		//End--------------------------------------------
+
 		default:
 			cerr << "Unexpected system call " << type << "\n";
 			break;
