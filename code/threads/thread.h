@@ -104,8 +104,10 @@ class Thread {
     char* getName() { return (name); }
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
+    void MyExec(char *userProgName);
+	int pId;
 
-  private:
+private:
     // some of the private data for this class is listed above
     
     int *stack; 	 	// Bottom of the stack 

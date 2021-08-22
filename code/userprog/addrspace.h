@@ -19,9 +19,9 @@
 #define UserStackSize		1024 	// increase this as necessary!
 
 class AddrSpace {
-  public:
+    public:
     AddrSpace();			// Create an address space.
-    AddrSpace(OpenFile *executable);
+    // AddrSpace(OpenFile *executable);
     ~AddrSpace();			// De-allocate an address space
 
     bool Load(char *fileName);		// Load a program into addr space from
@@ -40,9 +40,9 @@ class AddrSpace {
     // is 0 for Read, 1 for Write.
     ExceptionType Translate(unsigned int vaddr, unsigned int *paddr, int mode);
 	
+    static bool phyPageStatus[NumPhysPages];
+	static int numFreePages;
  	private:
-	static bool PhyPageStatus[NumPhysPages];
-	static int NumFreePages;
     TranslationEntry *pageTable;	// Assume linear page table translation
 					// for now!
     unsigned int numPages;		// Number of pages in the virtual 

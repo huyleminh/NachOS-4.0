@@ -33,6 +33,8 @@
 #define MAX_CHAR_ARRAY 255
 #define MaxFileLength 32
 
+int pId = 0;
+
 char *User2System(int virtAddr, int limit)
 {
 	int oneChar;
@@ -103,7 +105,10 @@ void IncreasePC()
 //	"which" is the kind of exception.  The list of possible exceptions
 //	is in machine.h.
 //----------------------------------------------------------------------
-
+static void addrSpaceExecute(AddrSpace *space) {
+    space->Execute();   // run the program
+	ASSERTNOTREACHED();
+}
 void ExceptionHandler(ExceptionType which)
 {
 	int type = kernel->machine->ReadRegister(2);
@@ -184,6 +189,41 @@ void ExceptionHandler(ExceptionType which)
 			return;
 			ASSERTNOTREACHED();
 			break;
+		}
+		case SC_Exec:
+		{
+			DEBUG(dbgFile, "\nSC_PrintString");
+
+			DEBUG(dbgFile, "\nReading virtual address of buffer data");
+			int virtAddr = kernel->machine->ReadRegister(4); // first argument
+
+			char *filename = User2System(virtAddr, MAX_CHAR_ARRAY);
+
+			char buf[255];
+			bzero(buf, 255);
+			sprintf(buf, "p%d", pId);
+			Thread *mythread = new Thread(buf);
+			mythread->pId = pId++;
+			
+			AddrSpace *space = new AddrSpace;
+			ASSERT(space != (AddrSpace *)NULL);
+				
+
+			if (filename != NULL) {
+				AddrSpace *space = new AddrSpace;
+				ASSERT(space != (AddrSpace *)NULL);
+				
+				// load the program into the space
+				if (space->Load(filename)) {
+					mythread->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)space);
+					kernel->currentThread->Yield();
+				}
+			}
+
+			// // kernel->currentThread->MyExec(filename);
+			delete[] filename;
+			IncreasePC();
+			return;
 		}
 		case SC_Exit:
 		{
@@ -538,7 +578,7 @@ void ExceptionHandler(ExceptionType which)
 			return;
 		}
 
-		//End--------------------------------------------
+			//End--------------------------------------------
 
 		default:
 			cerr << "Unexpected system call " << type << "\n";
