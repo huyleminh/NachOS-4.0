@@ -434,23 +434,22 @@ Thread::SelfTest()
     SimpleThread(0);
 }
 
-static void addrSpaceExecute(AddrSpace *space) {
-    space->Execute();   // run the program
-}
+// static void addrSpaceExecute(AddrSpace *space) {
+//     space->Execute();   // run the program
+// }
 
-void Thread::MyExec(char *userProgName) {
-    DEBUG(dbgThread, "Entering Thread::SelfTest");
+// void Thread::MyExec(char *userProgName) {
+//     AddrSpace *space = new AddrSpace;
+// 	ASSERT(space != (AddrSpace *)NULL);	
 
-    Thread *t = new Thread("forked thread");
-
-    if (userProgName != NULL) {
-		AddrSpace *space = new AddrSpace;
-		ASSERT(space != (AddrSpace *)NULL);
-		if (space->Load(userProgName))
-		{                       // load the program into the space
-            t->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)space);
-            kernel->currentThread->Yield();
-			ASSERTNOTREACHED(); // Execute never returns
-		}
-	}
-}
+// 	if (userProgName != NULL) {
+// 		AddrSpace *space = new AddrSpace;
+// 		ASSERT(space != (AddrSpace *)NULL);
+				
+// 		// load the program into the space
+// 		if (space->Load(userProgName)) {
+// 			this->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)&space);
+// 			kernel->currentThread->Yield();
+// 		}
+// 	}
+// }

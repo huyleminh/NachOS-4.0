@@ -6,5 +6,4 @@ int main()
     PrintString("Ping-Pong program is running ...\n");
     pingId = Exec("ping");
     pongId = Exec("pong");
-    Halt();
 }
