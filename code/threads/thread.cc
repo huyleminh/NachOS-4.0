@@ -171,11 +171,11 @@ Thread::Begin ()
 void
 Thread::Finish ()
 {
-    (void) kernel->interrupt->SetLevel(IntOff);		
+    (void) kernel->interrupt->SetLevel(IntOff);		   
     ASSERT(this == kernel->currentThread);
     
     DEBUG(dbgThread, "Finishing thread: " << name);
-    
+
     Sleep(TRUE);				// invokes SWITCH
     // not reached
 }
@@ -248,7 +248,7 @@ Thread::Sleep (bool finishing)
 
     status = BLOCKED;
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
-	kernel->interrupt->Idle();	// no one to run, wait for an interrupt
+	    kernel->interrupt->Idle();	// no one to run, wait for an interrupt
     
     // returns when it's time for us to run
     kernel->scheduler->Run(nextThread, finishing); 

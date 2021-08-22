@@ -202,7 +202,6 @@ void ExceptionHandler(ExceptionType which)
 			char buf[255];
 			bzero(buf, 255);
 			sprintf(buf, "p%d", pId);
-			char threadName[10];
 			Thread *mythread = new Thread(buf);
 			mythread->pId = pId++;
 
