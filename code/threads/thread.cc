@@ -210,8 +210,8 @@ Thread::Yield ()
     
     nextThread = kernel->scheduler->FindNextToRun();
     if (nextThread != NULL) {
-	kernel->scheduler->ReadyToRun(this);
-	kernel->scheduler->Run(nextThread, FALSE);
+	    kernel->scheduler->ReadyToRun(this);
+	    kernel->scheduler->Run(nextThread, FALSE);
     }
     (void) kernel->interrupt->SetLevel(oldLevel);
 }
@@ -411,7 +411,7 @@ SimpleThread(int which)
     int num;
     
     for (num = 0; num < 5; num++) {
-	cout << "*** thread " << which << " looped " << num << " times\n";
+	    cout << "*** thread " << which << " looped " << num << " times\n";
         kernel->currentThread->Yield();
     }
 }
@@ -434,3 +434,23 @@ Thread::SelfTest()
     SimpleThread(0);
 }
 
+static void addrSpaceExecute(AddrSpace *space) {
+    space->Execute();   // run the program
+}
+
+void Thread::MyExec(char *userProgName) {
+    DEBUG(dbgThread, "Entering Thread::SelfTest");
+
+    Thread *t = new Thread("forked thread");
+
+    if (userProgName != NULL) {
+		AddrSpace *space = new AddrSpace;
+		ASSERT(space != (AddrSpace *)NULL);
+		if (space->Load(userProgName))
+		{                       // load the program into the space
+            t->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)space);
+            kernel->currentThread->Yield();
+			ASSERTNOTREACHED(); // Execute never returns
+		}
+	}
+}

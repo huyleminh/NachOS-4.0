@@ -112,7 +112,7 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-PROGRAMS = randomnumber help ascii teststring ReadPrintInt testchar createfile add halt shell matmult sort segments
+PROGRAMS = ping pong scheduler randomnumber help ascii teststring ReadPrintInt testchar createfile add halt shell matmult sort segments
 
 endif
 
@@ -128,6 +128,24 @@ halt: halt.o start.o
 	$(COFF2NOFF) halt.coff halt
 
 # These program below are used to test the system call
+scheduler.o: scheduler.c
+	$(CC) $(CFLAGS) -c scheduler.c
+scheduler: scheduler.o start.o
+	$(LD) $(LDFLAGS) start.o scheduler.o -o scheduler.coff
+	$(COFF2NOFF) scheduler.coff scheduler
+
+ping.o: ping.c
+	$(CC) $(CFLAGS) -c ping.c
+ping: ping.o start.o
+	$(LD) $(LDFLAGS) start.o ping.o -o ping.coff
+	$(COFF2NOFF) ping.coff ping
+
+pong.o: pong.c
+	$(CC) $(CFLAGS) -c pong.c
+pong: pong.o start.o
+	$(LD) $(LDFLAGS) start.o pong.o -o pong.coff
+	$(COFF2NOFF) pong.coff pong
+
 teststring.o: teststring.c
 	$(CC) $(CFLAGS) -c teststring.c
 teststring: teststring.o start.o
