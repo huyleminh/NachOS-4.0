@@ -105,9 +105,9 @@ void IncreasePC()
 //	"which" is the kind of exception.  The list of possible exceptions
 //	is in machine.h.
 //----------------------------------------------------------------------
-static void addrSpaceExecute(AddrSpace *space) {
+void addrSpaceExecute(AddrSpace *space) {
     space->Execute();   // run the program
-	ASSERTNOTREACHED();
+	// ASSERTNOTREACHED();
 }
 void ExceptionHandler(ExceptionType which)
 {
@@ -202,12 +202,9 @@ void ExceptionHandler(ExceptionType which)
 			char buf[255];
 			bzero(buf, 255);
 			sprintf(buf, "p%d", pId);
+			char threadName[10];
 			Thread *mythread = new Thread(buf);
 			mythread->pId = pId++;
-			
-			AddrSpace *space = new AddrSpace;
-			ASSERT(space != (AddrSpace *)NULL);
-				
 
 			if (filename != NULL) {
 				AddrSpace *space = new AddrSpace;
@@ -220,7 +217,10 @@ void ExceptionHandler(ExceptionType which)
 				}
 			}
 
-			// // kernel->currentThread->MyExec(filename);
+			cout << "mythread->pId: " << mythread->pId << endl;
+			cout << "kernel->currentThread->pId: " << kernel->currentThread->pId << endl;
+			cout << "filename: " << filename << endl;
+
 			delete[] filename;
 			IncreasePC();
 			return;
