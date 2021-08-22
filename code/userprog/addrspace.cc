@@ -117,14 +117,11 @@ bool AddrSpace::Load(char *fileName)
         cerr << "Unable to open file " << fileName << "\n";
         return FALSE;
     }
-    // cout << noffH.noffMagic << endl;
 
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
-    // cout << noffH.noffMagic << endl;
     if ((noffH.noffMagic != NOFFMAGIC) && (WordToHost(noffH.noffMagic) == NOFFMAGIC))
         SwapHeader(&noffH);
 
-    // cout << noffH.noffMagic << endl;
     ASSERT(noffH.noffMagic == NOFFMAGIC);
 
 #ifdef RDATA
@@ -149,8 +146,7 @@ bool AddrSpace::Load(char *fileName)
         delete[] pageTable;
 
     pageTable = new TranslationEntry[numPages];
-    for (unsigned int i = 0, idx = 0; i < numPages; i++)
-    {
+    for (unsigned int i = 0, idx = 0; i < numPages; i++) {
         pageTable[i].virtualPage = i;
         while (idx < NumPhysPages && AddrSpace::phyPageStatus[idx] == TRUE)
             idx++;
@@ -170,20 +166,6 @@ bool AddrSpace::Load(char *fileName)
 
     // then, copy in the code and data segments into memory
     // Note: this code assumes that virtual address = physical address
-    // if (noffH.code.size > 0) {
-    //     DEBUG(dbgAddr, "Initializing code segment.");
-    //     DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
-    //     executable->ReadAt(
-    // 	&(kernel->machine->mainMemory[noffH.code.virtualAddr]),
-    // 		noffH.code.size, noffH.code.inFileAddr);
-    // }
-    // if (noffH.initData.size > 0) {
-    //     DEBUG(dbgAddr, "Initializing data segment.");
-    //     DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
-    //     executable->ReadAt(
-    // 	&(kernel->machine->mainMemory[noffH.initData.virtualAddr]),
-    // 		noffH.initData.size, noffH.initData.inFileAddr);
-    // }
     if (noffH.code.size > 0)
     {
         DEBUG(dbgAddr, "Initializing code segment.");

@@ -21,8 +21,6 @@
 #include "machine.h"
 #include "mipssim.h"
 #include "main.h"
-#include <time.h>
-#include <stdlib.h>
 
 
 static void Mult(int a, int b, bool signedArith, int* hiPtr, int* loPtr);
@@ -56,9 +54,7 @@ class Instruction {
 //	times concurrently -- one for each thread executing user code.
 //----------------------------------------------------------------------
 
-void
-Machine::Run()
-{
+void Machine::Run() {
     Instruction *instr = new Instruction;  // storage for decoded instruction
 
     if (debug->IsEnabled('m')) {

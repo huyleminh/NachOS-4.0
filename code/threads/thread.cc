@@ -36,7 +36,7 @@ const int STACK_FENCEPOST = 0xdedbeef;
 
 Thread::Thread(char* threadName)
 {
-    name = threadName;
+    // name = threadName;
     int length = 0;
     while (threadName[length++] != 0);
     name = new char[length+1];
@@ -244,20 +244,19 @@ Thread::Yield ()
 //	so that there can't be a time slice between pulling the first thread
 //	off the ready list, and switching to it.
 //----------------------------------------------------------------------
-void
-Thread::Sleep (bool finishing)
-{
+void Thread::Sleep (bool finishing) {
     Thread *nextThread;
-    
+
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
-    
+
     DEBUG(dbgThread, "Sleeping thread: " << name);
 
     status = BLOCKED;
-    while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
-	    kernel->interrupt->Idle();	// no one to run, wait for an interrupt
-    
+    while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL) {
+        kernel->interrupt->Idle();	// no one to run, wait for an interrupt
+    }
+
     // returns when it's time for us to run
     kernel->scheduler->Run(nextThread, finishing); 
 }
@@ -441,28 +440,3 @@ Thread::SelfTest()
     kernel->currentThread->Yield();
     SimpleThread(0);
 }
-
-// static void addrSpaceExecute(AddrSpace *space) {
-//     space->Execute();   // run the program
-// }
-
-// void Thread::MyExec(char *filename) {
-//     char buf[255];
-// 	bzero(buf, 255);
-// 	sprintf(buf, "p%d", numThreads);
-// 	Thread *mythread = new Thread(buf);
-// 	mythread->pId = numThreads++;
-
-//     if (filename != NULL) {
-// 		AddrSpace *space = new AddrSpace;
-// 		ASSERT(space != (AddrSpace *)NULL);
-//         mythread->space = space;
-// 		cout << filename << " - " << mythread->pId << endl;
-
-// 		// load the program into the space
-// 		if (space->Load(filename)) {
-// 			mythread->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)space);
-// 			// kernel->currentThread->Yield();
-// 		}
-// 	}
-// }

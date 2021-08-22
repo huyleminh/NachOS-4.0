@@ -86,7 +86,7 @@ Interrupt::Interrupt()
 Interrupt::~Interrupt()
 {
     while (!pending->IsEmpty()) {
-	delete pending->RemoveFront();
+	    delete pending->RemoveFront();
     }
     delete pending;
 }
@@ -153,10 +153,10 @@ Interrupt::OneTick()
 // advance simulated time
     if (status == SystemMode) {
         stats->totalTicks += SystemTick;
-	stats->systemTicks += SystemTick;
+	    stats->systemTicks += SystemTick;
     } else {
-	stats->totalTicks += UserTick;
-	stats->userTicks += UserTick;
+	    stats->totalTicks += UserTick;
+	    stats->userTicks += UserTick;
     }
     DEBUG(dbgInt, "== Tick " << stats->totalTicks << " ==");
 
@@ -168,10 +168,10 @@ Interrupt::OneTick()
     ChangeLevel(IntOff, IntOn);	// re-enable interrupts
     if (yieldOnReturn) {	// if the timer device handler asked 
     				// for a context switch, ok to do it now
-	yieldOnReturn = FALSE;
- 	status = SystemMode;		// yield is a kernel routine
-	kernel->currentThread->Yield();
-	status = oldStatus;
+        yieldOnReturn = FALSE;
+        status = SystemMode;		// yield is a kernel routine
+        kernel->currentThread->Yield();
+        status = oldStatus;
     }
 }
 
@@ -205,13 +205,12 @@ Interrupt::YieldOnReturn()
 //	more for us to do.
 //----------------------------------------------------------------------
 void
-Interrupt::Idle()
-{
+Interrupt::Idle() {
     DEBUG(dbgInt, "Machine idling; checking for interrupts.");
     status = IdleMode;
     if (CheckIfDue(TRUE)) {	// check for any pending interrupts
-	status = SystemMode;
-	return;			// return in case there's now
+	    status = SystemMode;
+	    return;			// return in case there's now
 				// a runnable thread
     }
 
@@ -220,7 +219,7 @@ Interrupt::Idle()
     // operating, there are *always* pending interrupts, so this code
     // is not reached.  Instead, the halt must be invoked by the user program.
 
-    DEBUG(dbgInt, "Machine idle.  No interrupts to do.");
+    DEBUG(dbgInt, "Machine idle. No interrupts to do.");
     cout << "No threads ready or runnable, and no pending interrupts.\n";
     cout << "Assuming the program completed.\n";
     Halt();
@@ -286,10 +285,10 @@ Interrupt::CheckIfDue(bool advanceClock)
     ASSERT(level == IntOff);		// interrupts need to be disabled,
 					// to invoke an interrupt handler
     if (debug->IsEnabled(dbgInt)) {
-	DumpState();
+	    DumpState();
     }
     if (pending->IsEmpty()) {   	// no pending interrupts
-	return FALSE;	
+	    return FALSE;	
     }		
     next = pending->Front();
     if (next->when > stats->totalTicks) {
@@ -297,26 +296,26 @@ Interrupt::CheckIfDue(bool advanceClock)
             return FALSE;
         }
         else {      		// advance the clock to next interrupt
-	    stats->idleTicks += (next->when - stats->totalTicks);
-	    stats->totalTicks = next->when;
+	        stats->idleTicks += (next->when - stats->totalTicks);
+	        stats->totalTicks = next->when;
 	    // UDelay(1000L); // rcgood - to stop nachos from spinning.
-	}
+	    }
     }
 
     DEBUG(dbgInt, "Invoking interrupt handler for the ");
     DEBUG(dbgInt, intTypeNames[next->type] << " at time " << next->when);
-
+#ifdef USER_PROGRAM
     if (kernel->machine != NULL) {
     	kernel->machine->DelayedLoad(0, 0);
     }
-
+#endif
     inHandler = TRUE;
     do {
         next = pending->RemoveFront();    // pull interrupt off list
         next->callOnInterrupt->CallBack();// call the interrupt handler
-	delete next;
-    } while (!pending->IsEmpty() 
-    		&& (pending->Front()->when <= stats->totalTicks));
+	    delete next;
+    } while (!pending->IsEmpty() && (pending->Front()->when <= stats->totalTicks));
+    
     inHandler = FALSE;
     return TRUE;
 }
