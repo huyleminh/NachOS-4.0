@@ -197,51 +197,26 @@ void ExceptionHandler(ExceptionType which)
 			DEBUG(dbgFile, "\nReading virtual address of buffer data");
 			int virtAddr = kernel->machine->ReadRegister(4); // first argument
 
-			char *filename = User2System(virtAddr, MAX_CHAR_ARRAY);	
-			// kernel->currentThread->MyExec(filename);
-			// char buf[255];
-			// bzero(buf, 255);
-			// sprintf(buf, "p%d", numThreads);
-			// Thread *mythread = new Thread(buf);
-			// mythread->pId = numThreads++;		
-			// cout << filename << " - " << mythread->pId << endl;
-
-			// if (filename != NULL) {
-			// 	AddrSpace *space = new AddrSpace();
-			// 	ASSERT(space != (AddrSpace *)NULL);
-			// 	mythread->space = space;
-
-			// 	// load the program into the space
-			// 	if (space->Load(filename)) {
-			// 		mythread->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)space);
-			// 		// kernel->currentThread->Yield();
-			// 	}
-			// }
-
-			// cout << "mythread->pId: " << mythread->pId << endl;
-			// cout << "kernel->currentThread->pId: " << kernel->currentThread->pId << endl;
-			// cout << "filename: " << filename << endl;
-			
+			char *userProgName = User2System(virtAddr, MAX_CHAR_ARRAY);	
 			char buf[255];
 			bzero(buf, 255);
 			sprintf(buf, "p%d", numThreads);
 			Thread *mythread = new Thread(buf);
 			mythread->pId = numThreads++;
 
-			if (filename != NULL) {
+			if (userProgName != NULL) {
 				AddrSpace *space = new AddrSpace;
 				ASSERT(space != (AddrSpace *)NULL);
 				mythread->space = space;
-				// cout << filename << " - " << mythread->pId << endl;
 
 				// load the program into the space
-				if (space->Load(filename)) {
+				if (space->Load(userProgName)) {
 					mythread->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)space);
-					kernel->currentThread->Yield();
+					kernel->machine->WriteRegister(2, mythread->pId);
 				}
 			}
 
-			delete[] filename;
+			delete[] userProgName;
 			IncreasePC();
 			return;
 		}

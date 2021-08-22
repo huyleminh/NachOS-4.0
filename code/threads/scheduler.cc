@@ -77,7 +77,7 @@ Scheduler::FindNextToRun ()
     ASSERT(kernel->interrupt->getLevel() == IntOff);
 
     if (readyList->IsEmpty()) {
-	return NULL;
+	    return NULL;
     } else {
     	return readyList->RemoveFront();
     }
@@ -162,7 +162,7 @@ Scheduler::CheckToBeDestroyed()
 {
     if (toBeDestroyed != NULL) {
         delete toBeDestroyed;
-	toBeDestroyed = NULL;
+	    toBeDestroyed = NULL;
     }
 }
  
