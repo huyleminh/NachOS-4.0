@@ -1,0 +1,1842 @@
+diff --git a/code/build.linux/addrspace.o b/code/build.linux/addrspace.o
+index 6d185e8..2594010 100644
+Binary files a/code/build.linux/addrspace.o and b/code/build.linux/addrspace.o differ
+diff --git a/code/build.linux/alarm.o b/code/build.linux/alarm.o
+index 993638a..4e3a0b0 100644
+Binary files a/code/build.linux/alarm.o and b/code/build.linux/alarm.o differ
+diff --git a/code/build.linux/console.o b/code/build.linux/console.o
+index 3eca388..e9fe948 100644
+Binary files a/code/build.linux/console.o and b/code/build.linux/console.o differ
+diff --git a/code/build.linux/disk.o b/code/build.linux/disk.o
+index 8ae9887..4180134 100644
+Binary files a/code/build.linux/disk.o and b/code/build.linux/disk.o differ
+diff --git a/code/build.linux/filehdr.o b/code/build.linux/filehdr.o
+index f307dfe..392db37 100644
+Binary files a/code/build.linux/filehdr.o and b/code/build.linux/filehdr.o differ
+diff --git a/code/build.linux/interrupt.o b/code/build.linux/interrupt.o
+index d92293d..e87b4a8 100644
+Binary files a/code/build.linux/interrupt.o and b/code/build.linux/interrupt.o differ
+diff --git a/code/build.linux/kernel.o b/code/build.linux/kernel.o
+index 9b3ab41..78707fa 100644
+Binary files a/code/build.linux/kernel.o and b/code/build.linux/kernel.o differ
+diff --git a/code/build.linux/machine.o b/code/build.linux/machine.o
+index 5926ebb..dfa3c78 100644
+Binary files a/code/build.linux/machine.o and b/code/build.linux/machine.o differ
+diff --git a/code/build.linux/main.o b/code/build.linux/main.o
+index 95b4730..7510c6b 100644
+Binary files a/code/build.linux/main.o and b/code/build.linux/main.o differ
+diff --git a/code/build.linux/mipssim.o b/code/build.linux/mipssim.o
+index 30d10aa..d6b7722 100644
+Binary files a/code/build.linux/mipssim.o and b/code/build.linux/mipssim.o differ
+diff --git a/code/build.linux/nachos b/code/build.linux/nachos
+index 37b5245..dbd51be 100755
+Binary files a/code/build.linux/nachos and b/code/build.linux/nachos differ
+diff --git a/code/build.linux/network.o b/code/build.linux/network.o
+index 59745d0..8808cf4 100644
+Binary files a/code/build.linux/network.o and b/code/build.linux/network.o differ
+diff --git a/code/build.linux/post.o b/code/build.linux/post.o
+index 4520b71..723ed68 100644
+Binary files a/code/build.linux/post.o and b/code/build.linux/post.o differ
+diff --git a/code/build.linux/scheduler.o b/code/build.linux/scheduler.o
+index c08fc43..9304dc9 100644
+Binary files a/code/build.linux/scheduler.o and b/code/build.linux/scheduler.o differ
+diff --git a/code/build.linux/synch.o b/code/build.linux/synch.o
+index 99b0a28..59b18e3 100644
+Binary files a/code/build.linux/synch.o and b/code/build.linux/synch.o differ
+diff --git a/code/build.linux/synchdisk.o b/code/build.linux/synchdisk.o
+index 5cf89b3..af0189f 100644
+Binary files a/code/build.linux/synchdisk.o and b/code/build.linux/synchdisk.o differ
+diff --git a/code/build.linux/sysdep.o b/code/build.linux/sysdep.o
+index 643ab0b..c3066c9 100644
+Binary files a/code/build.linux/sysdep.o and b/code/build.linux/sysdep.o differ
+diff --git a/code/build.linux/thread.o b/code/build.linux/thread.o
+index cbddf6c..a87a55f 100644
+Binary files a/code/build.linux/thread.o and b/code/build.linux/thread.o differ
+diff --git a/code/build.linux/timer.o b/code/build.linux/timer.o
+index 82a0c72..5a16be7 100644
+Binary files a/code/build.linux/timer.o and b/code/build.linux/timer.o differ
+diff --git a/code/filesys/directory.cc b/code/filesys/directory.cc
+index 5fcbf53..57dbccb 100644
+--- a/code/filesys/directory.cc
++++ b/code/filesys/directory.cc
+@@ -108,9 +108,9 @@ int
+ Directory::Find(char *name)
+ {
+     int i = FindIndex(name);
+-
++    
+     if (i != -1)
+-	return table[i].sector;
++	    return table[i].sector;
+     return -1;
+ }
+ 
+diff --git a/code/filesys/filesys.cc b/code/filesys/filesys.cc
+index c49469e..3ade8d9 100644
+--- a/code/filesys/filesys.cc
++++ b/code/filesys/filesys.cc
+@@ -1,9 +1,9 @@
+-// filesys.cc 
++// filesys.cc
+ //	Routines to manage the overall operation of the file system.
+ //	Implements routines to map from textual file names to files.
+ //
+ //	Each file in the file system has:
+-//	   A file header, stored in a sector on disk 
++//	   A file header, stored in a sector on disk
+ //		(the size of the file header data structure is arranged
+ //		to be precisely the size of 1 disk sector)
+ //	   A number of data blocks
+@@ -15,7 +15,7 @@
+ //
+ //      Both the bitmap and the directory are represented as normal
+ //	files.  Their file headers are located in specific sectors
+-//	(sector 0 and sector 1), so that the file system can find them 
++//	(sector 0 and sector 1), so that the file system can find them
+ //	on bootup.
+ //
+ //	The file system assumes that the bitmap and directory files are
+@@ -40,7 +40,7 @@
+ //	    the file system, it may corrupt the disk)
+ //
+ // Copyright (c) 1992-1993 The Regents of the University of California.
+-// All rights reserved.  See copyright.h for copyright notice and limitation 
++// All rights reserved.  See copyright.h for copyright notice and limitation
+ // of liability and disclaimer of warranty provisions.
+ #ifndef FILESYS_STUB
+ 
+@@ -53,24 +53,24 @@
+ #include "filesys.h"
+ 
+ // Sectors containing the file headers for the bitmap of free sectors,
+-// and the directory of files.  These file headers are placed in well-known 
++// and the directory of files.  These file headers are placed in well-known
+ // sectors, so that they can be located on boot-up.
+-#define FreeMapSector 		0
+-#define DirectorySector 	1
++#define FreeMapSector 0
++#define DirectorySector 1
+ 
+ // Initial file sizes for the bitmap and directory; until the file system
+-// supports extensible files, the directory size sets the maximum number 
++// supports extensible files, the directory size sets the maximum number
+ // of files that can be loaded onto the disk.
+-#define FreeMapFileSize 	(NumSectors / BitsInByte)
+-#define NumDirEntries 		10
+-#define DirectoryFileSize 	(sizeof(DirectoryEntry) * NumDirEntries)
++#define FreeMapFileSize (NumSectors / BitsInByte)
++#define NumDirEntries 10
++#define DirectoryFileSize (sizeof(DirectoryEntry) * NumDirEntries)
+ 
+ //----------------------------------------------------------------------
+ // FileSystem::FileSystem
+ // 	Initialize the file system.  If format = TRUE, the disk has
+ //	nothing on it, and we need to initialize the disk to contain
+ //	an empty directory, and a bitmap of free sectors (with almost but
+-//	not all of the sectors marked as free).  
++//	not all of the sectors marked as free).
+ //
+ //	If format = FALSE, we just have to open the files
+ //	representing the bitmap and the directory.
+@@ -79,64 +79,68 @@
+ //----------------------------------------------------------------------
+ 
+ FileSystem::FileSystem(bool format)
+-{ 
++{
+     DEBUG(dbgFile, "Initializing the file system.");
+-    if (format) {
++    if (format)
++    {
+         PersistentBitmap *freeMap = new PersistentBitmap(NumSectors);
+         Directory *directory = new Directory(NumDirEntries);
+-	FileHeader *mapHdr = new FileHeader;
+-	FileHeader *dirHdr = new FileHeader;
++        FileHeader *mapHdr = new FileHeader;
++        FileHeader *dirHdr = new FileHeader;
+ 
+         DEBUG(dbgFile, "Formatting the file system.");
+ 
+-    // First, allocate space for FileHeaders for the directory and bitmap
+-    // (make sure no one else grabs these!)
+-	freeMap->Mark(FreeMapSector);	    
+-	freeMap->Mark(DirectorySector);
++        // First, allocate space for FileHeaders for the directory and bitmap
++        // (make sure no one else grabs these!)
++        freeMap->Mark(FreeMapSector);
++        freeMap->Mark(DirectorySector);
+ 
+-    // Second, allocate space for the data blocks containing the contents
+-    // of the directory and bitmap files.  There better be enough space!
++        // Second, allocate space for the data blocks containing the contents
++        // of the directory and bitmap files.  There better be enough space!
+ 
+-	ASSERT(mapHdr->Allocate(freeMap, FreeMapFileSize));
+-	ASSERT(dirHdr->Allocate(freeMap, DirectoryFileSize));
++        ASSERT(mapHdr->Allocate(freeMap, FreeMapFileSize));
++        ASSERT(dirHdr->Allocate(freeMap, DirectoryFileSize));
+ 
+-    // Flush the bitmap and directory FileHeaders back to disk
+-    // We need to do this before we can "Open" the file, since open
+-    // reads the file header off of disk (and currently the disk has garbage
+-    // on it!).
++        // Flush the bitmap and directory FileHeaders back to disk
++        // We need to do this before we can "Open" the file, since open
++        // reads the file header off of disk (and currently the disk has garbage
++        // on it!).
+ 
+         DEBUG(dbgFile, "Writing headers back to disk.");
+-	mapHdr->WriteBack(FreeMapSector);    
+-	dirHdr->WriteBack(DirectorySector);
++        mapHdr->WriteBack(FreeMapSector);
++        dirHdr->WriteBack(DirectorySector);
+ 
+-    // OK to open the bitmap and directory files now
+-    // The file system operations assume these two files are left open
+-    // while Nachos is running.
++        // OK to open the bitmap and directory files now
++        // The file system operations assume these two files are left open
++        // while Nachos is running.
+ 
+         freeMapFile = new OpenFile(FreeMapSector);
+         directoryFile = new OpenFile(DirectorySector);
+-     
+-    // Once we have the files "open", we can write the initial version
+-    // of each file back to disk.  The directory at this point is completely
+-    // empty; but the bitmap has been changed to reflect the fact that
+-    // sectors on the disk have been allocated for the file headers and
+-    // to hold the file data for the directory and bitmap.
++
++        // Once we have the files "open", we can write the initial version
++        // of each file back to disk.  The directory at this point is completely
++        // empty; but the bitmap has been changed to reflect the fact that
++        // sectors on the disk have been allocated for the file headers and
++        // to hold the file data for the directory and bitmap.
+ 
+         DEBUG(dbgFile, "Writing bitmap and directory back to disk.");
+-	freeMap->WriteBack(freeMapFile);	 // flush changes to disk
+-	directory->WriteBack(directoryFile);
++        freeMap->WriteBack(freeMapFile); // flush changes to disk
++        directory->WriteBack(directoryFile);
+ 
+-	if (debug->IsEnabled('f')) {
+-	    freeMap->Print();
+-	    directory->Print();
++        if (debug->IsEnabled('f'))
++        {
++            freeMap->Print();
++            directory->Print();
+         }
+-        delete freeMap; 
+-	delete directory; 
+-	delete mapHdr; 
+-	delete dirHdr;
+-    } else {
+-    // if we are not formatting the disk, just open the files representing
+-    // the bitmap and directory; these are left open while Nachos is running
++        delete freeMap;
++        delete directory;
++        delete mapHdr;
++        delete dirHdr;
++    }
++    else
++    {
++        // if we are not formatting the disk, just open the files representing
++        // the bitmap and directory; these are left open while Nachos is running
+         freeMapFile = new OpenFile(FreeMapSector);
+         directoryFile = new OpenFile(DirectorySector);
+     }
+@@ -153,7 +157,7 @@ FileSystem::FileSystem(bool format)
+ //        Allocate a sector for the file header
+ // 	  Allocate space on disk for the data blocks for the file
+ //	  Add the name to the directory
+-//	  Store the new file header on disk 
++//	  Store the new file header on disk
+ //	  Flush the changes to the bitmap and the directory back to disk
+ //
+ //	Return TRUE if everything goes ok, otherwise, return FALSE.
+@@ -162,7 +166,7 @@ FileSystem::FileSystem(bool format)
+ //   		file is already in directory
+ //	 	no free space for file header
+ //	 	no free entry for file in directory
+-//	 	no free space for data blocks for the file 
++//	 	no free space for data blocks for the file
+ //
+ // 	Note that this implementation assumes there is no concurrent access
+ //	to the file system!
+@@ -171,8 +175,7 @@ FileSystem::FileSystem(bool format)
+ //	"initialSize" -- size of file to be created
+ //----------------------------------------------------------------------
+ 
+-bool
+-FileSystem::Create(char *name, int initialSize)
++bool FileSystem::Create(char *name, int initialSize)
+ {
+     Directory *directory;
+     PersistentBitmap *freeMap;
+@@ -186,27 +189,30 @@ FileSystem::Create(char *name, int initialSize)
+     directory->FetchFrom(directoryFile);
+ 
+     if (directory->Find(name) != -1)
+-      success = FALSE;			// file is already in directory
+-    else {	
+-        freeMap = new PersistentBitmap(freeMapFile,NumSectors);
+-        sector = freeMap->FindAndSet();	// find a sector to hold the file header
+-    	if (sector == -1) 		
+-            success = FALSE;		// no free block for file header 
++        success = FALSE; // file is already in directory
++    else
++    {
++        freeMap = new PersistentBitmap(freeMapFile, NumSectors);
++        sector = freeMap->FindAndSet(); // find a sector to hold the file header
++        if (sector == -1)
++            success = FALSE; // no free block for file header
+         else if (!directory->Add(name, sector))
+-            success = FALSE;	// no space in directory
+-	else {
+-    	    hdr = new FileHeader;
+-	    if (!hdr->Allocate(freeMap, initialSize))
+-            	success = FALSE;	// no space on disk for data
+-	    else {	
+-	    	success = TRUE;
+-		// everthing worked, flush all changes back to disk
+-    	    	hdr->WriteBack(sector); 		
+-    	    	directory->WriteBack(directoryFile);
+-    	    	freeMap->WriteBack(freeMapFile);
+-	    }
++            success = FALSE; // no space in directory
++        else
++        {
++            hdr = new FileHeader;
++            if (!hdr->Allocate(freeMap, initialSize))
++                success = FALSE; // no space on disk for data
++            else
++            {
++                success = TRUE;
++                // everthing worked, flush all changes back to disk
++                hdr->WriteBack(sector);
++                directory->WriteBack(directoryFile);
++                freeMap->WriteBack(freeMapFile);
++            }
+             delete hdr;
+-	}
++        }
+         delete freeMap;
+     }
+     delete directory;
+@@ -215,9 +221,9 @@ FileSystem::Create(char *name, int initialSize)
+ 
+ //----------------------------------------------------------------------
+ // FileSystem::Open
+-// 	Open a file for reading and writing.  
++// 	Open a file for reading and writing.
+ //	To open a file:
+-//	  Find the location of the file's header, using the directory 
++//	  Find the location of the file's header, using the directory
+ //	  Bring the header into memory
+ //
+ //	"name" -- the text name of the file to be opened
+@@ -225,18 +231,18 @@ FileSystem::Create(char *name, int initialSize)
+ 
+ OpenFile *
+ FileSystem::Open(char *name)
+-{ 
++{
+     Directory *directory = new Directory(NumDirEntries);
+     OpenFile *openFile = NULL;
+     int sector;
+ 
+     DEBUG(dbgFile, "Opening file" << name);
+     directory->FetchFrom(directoryFile);
+-    sector = directory->Find(name); 
+-    if (sector >= 0) 		
+-	openFile = new OpenFile(sector);	// name was found in directory 
++    sector = directory->Find(name);
++    if (sector >= 0)
++        openFile = new OpenFile(sector); // name was found in directory
+     delete directory;
+-    return openFile;				// return NULL if not found
++    return openFile; // return NULL if not found
+ }
+ 
+ //----------------------------------------------------------------------
+@@ -253,45 +259,44 @@ FileSystem::Open(char *name)
+ //	"name" -- the text name of the file to be removed
+ //----------------------------------------------------------------------
+ 
+-bool
+-FileSystem::Remove(char *name)
+-{ 
++bool FileSystem::Remove(char *name)
++{
+     Directory *directory;
+     PersistentBitmap *freeMap;
+     FileHeader *fileHdr;
+     int sector;
+-    
++
+     directory = new Directory(NumDirEntries);
+     directory->FetchFrom(directoryFile);
+     sector = directory->Find(name);
+-    if (sector == -1) {
+-       delete directory;
+-       return FALSE;			 // file not found 
++    if (sector == -1)
++    {
++        delete directory;
++        return FALSE; // file not found
+     }
+     fileHdr = new FileHeader;
+     fileHdr->FetchFrom(sector);
+ 
+-    freeMap = new PersistentBitmap(freeMapFile,NumSectors);
++    freeMap = new PersistentBitmap(freeMapFile, NumSectors);
+ 
+-    fileHdr->Deallocate(freeMap);  		// remove data blocks
+-    freeMap->Clear(sector);			// remove header block
++    fileHdr->Deallocate(freeMap); // remove data blocks
++    freeMap->Clear(sector);       // remove header block
+     directory->Remove(name);
+ 
+-    freeMap->WriteBack(freeMapFile);		// flush to disk
+-    directory->WriteBack(directoryFile);        // flush to disk
++    freeMap->WriteBack(freeMapFile);     // flush to disk
++    directory->WriteBack(directoryFile); // flush to disk
+     delete fileHdr;
+     delete directory;
+     delete freeMap;
+     return TRUE;
+-} 
++}
+ 
+ //----------------------------------------------------------------------
+ // FileSystem::List
+ // 	List all the files in the file system directory.
+ //----------------------------------------------------------------------
+ 
+-void
+-FileSystem::List()
++void FileSystem::List()
+ {
+     Directory *directory = new Directory(NumDirEntries);
+ 
+@@ -310,12 +315,11 @@ FileSystem::List()
+ //	      the data in the file
+ //----------------------------------------------------------------------
+ 
+-void
+-FileSystem::Print()
++void FileSystem::Print()
+ {
+     FileHeader *bitHdr = new FileHeader;
+     FileHeader *dirHdr = new FileHeader;
+-    PersistentBitmap *freeMap = new PersistentBitmap(freeMapFile,NumSectors);
++    PersistentBitmap *freeMap = new PersistentBitmap(freeMapFile, NumSectors);
+     Directory *directory = new Directory(NumDirEntries);
+ 
+     printf("Bit map file header:\n");
+@@ -335,6 +339,6 @@ FileSystem::Print()
+     delete dirHdr;
+     delete freeMap;
+     delete directory;
+-} 
++}
+ 
+ #endif // FILESYS_STUB
+diff --git a/code/machine/interrupt.cc b/code/machine/interrupt.cc
+index c403322..b3b0cea 100644
+--- a/code/machine/interrupt.cc
++++ b/code/machine/interrupt.cc
+@@ -86,7 +86,7 @@ Interrupt::Interrupt()
+ Interrupt::~Interrupt()
+ {
+     while (!pending->IsEmpty()) {
+-	delete pending->RemoveFront();
++	    delete pending->RemoveFront();
+     }
+     delete pending;
+ }
+@@ -153,10 +153,10 @@ Interrupt::OneTick()
+ // advance simulated time
+     if (status == SystemMode) {
+         stats->totalTicks += SystemTick;
+-	stats->systemTicks += SystemTick;
++	    stats->systemTicks += SystemTick;
+     } else {
+-	stats->totalTicks += UserTick;
+-	stats->userTicks += UserTick;
++	    stats->totalTicks += UserTick;
++	    stats->userTicks += UserTick;
+     }
+     DEBUG(dbgInt, "== Tick " << stats->totalTicks << " ==");
+ 
+@@ -168,10 +168,10 @@ Interrupt::OneTick()
+     ChangeLevel(IntOff, IntOn);	// re-enable interrupts
+     if (yieldOnReturn) {	// if the timer device handler asked 
+     				// for a context switch, ok to do it now
+-	yieldOnReturn = FALSE;
+- 	status = SystemMode;		// yield is a kernel routine
+-	kernel->currentThread->Yield();
+-	status = oldStatus;
++        yieldOnReturn = FALSE;
++        status = SystemMode;		// yield is a kernel routine
++        kernel->currentThread->Yield();
++        status = oldStatus;
+     }
+ }
+ 
+@@ -205,13 +205,12 @@ Interrupt::YieldOnReturn()
+ //	more for us to do.
+ //----------------------------------------------------------------------
+ void
+-Interrupt::Idle()
+-{
++Interrupt::Idle() {
+     DEBUG(dbgInt, "Machine idling; checking for interrupts.");
+     status = IdleMode;
+     if (CheckIfDue(TRUE)) {	// check for any pending interrupts
+-	status = SystemMode;
+-	return;			// return in case there's now
++	    status = SystemMode;
++	    return;			// return in case there's now
+ 				// a runnable thread
+     }
+ 
+@@ -220,7 +219,7 @@ Interrupt::Idle()
+     // operating, there are *always* pending interrupts, so this code
+     // is not reached.  Instead, the halt must be invoked by the user program.
+ 
+-    DEBUG(dbgInt, "Machine idle.  No interrupts to do.");
++    DEBUG(dbgInt, "Machine idle. No interrupts to do.");
+     cout << "No threads ready or runnable, and no pending interrupts.\n";
+     cout << "Assuming the program completed.\n";
+     Halt();
+@@ -286,10 +285,10 @@ Interrupt::CheckIfDue(bool advanceClock)
+     ASSERT(level == IntOff);		// interrupts need to be disabled,
+ 					// to invoke an interrupt handler
+     if (debug->IsEnabled(dbgInt)) {
+-	DumpState();
++	    DumpState();
+     }
+     if (pending->IsEmpty()) {   	// no pending interrupts
+-	return FALSE;	
++	    return FALSE;	
+     }		
+     next = pending->Front();
+     if (next->when > stats->totalTicks) {
+@@ -297,26 +296,26 @@ Interrupt::CheckIfDue(bool advanceClock)
+             return FALSE;
+         }
+         else {      		// advance the clock to next interrupt
+-	    stats->idleTicks += (next->when - stats->totalTicks);
+-	    stats->totalTicks = next->when;
++	        stats->idleTicks += (next->when - stats->totalTicks);
++	        stats->totalTicks = next->when;
+ 	    // UDelay(1000L); // rcgood - to stop nachos from spinning.
+-	}
++	    }
+     }
+ 
+     DEBUG(dbgInt, "Invoking interrupt handler for the ");
+     DEBUG(dbgInt, intTypeNames[next->type] << " at time " << next->when);
+-
++#ifdef USER_PROGRAM
+     if (kernel->machine != NULL) {
+     	kernel->machine->DelayedLoad(0, 0);
+     }
+-
++#endif
+     inHandler = TRUE;
+     do {
+         next = pending->RemoveFront();    // pull interrupt off list
+         next->callOnInterrupt->CallBack();// call the interrupt handler
+-	delete next;
+-    } while (!pending->IsEmpty() 
+-    		&& (pending->Front()->when <= stats->totalTicks));
++	    delete next;
++    } while (!pending->IsEmpty() && (pending->Front()->when <= stats->totalTicks));
++    
+     inHandler = FALSE;
+     return TRUE;
+ }
+diff --git a/code/machine/mipssim.cc b/code/machine/mipssim.cc
+index b1820a7..b114e0e 100644
+--- a/code/machine/mipssim.cc
++++ b/code/machine/mipssim.cc
+@@ -22,6 +22,7 @@
+ #include "mipssim.h"
+ #include "main.h"
+ 
++
+ static void Mult(int a, int b, bool signedArith, int* hiPtr, int* loPtr);
+ 
+ // The following class defines an instruction, represented in both
+@@ -53,21 +54,24 @@ class Instruction {
+ //	times concurrently -- one for each thread executing user code.
+ //----------------------------------------------------------------------
+ 
+-void
+-Machine::Run()
+-{
++void Machine::Run() {
+     Instruction *instr = new Instruction;  // storage for decoded instruction
+ 
+     if (debug->IsEnabled('m')) {
+         cout << "Starting program in thread: " << kernel->currentThread->getName();
+-	cout << ", at time: " << kernel->stats->totalTicks << "\n";
++		cout << ", at time: " << kernel->stats->totalTicks << "\n";
+     }
+     kernel->interrupt->setStatus(UserMode);
++	
+     for (;;) {
+         OneInstruction(instr);
+-	kernel->interrupt->OneTick();
+-	if (singleStep && (runUntilTime <= kernel->stats->totalTicks))
+-	  Debugger();
++		
++		kernel->interrupt->OneTick();
++		if (singleStep && (runUntilTime <= kernel->stats->totalTicks))
++	  		Debugger();
++
++		// Our custom code.
++		kernel->currentThread->Yield();
+     }
+ }
+ 
+diff --git a/code/machine/translate.cc b/code/machine/translate.cc
+index 644055e..6548e34 100644
+--- a/code/machine/translate.cc
++++ b/code/machine/translate.cc
+@@ -193,8 +193,8 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
+ 
+ // check for alignment errors
+     if (((size == 4) && (virtAddr & 0x3)) || ((size == 2) && (virtAddr & 0x1))){
+-	DEBUG(dbgAddr, "Alignment problem at " << virtAddr << ", size " << size);
+-	return AddressErrorException;
++		DEBUG(dbgAddr, "Alignment problem at " << virtAddr << ", size " << size);
++		return AddressErrorException;
+     }
+     
+     // we must have either a TLB or a page table, but not both!
+diff --git a/code/test/Makefile b/code/test/Makefile
+index 29270d9..ff3256c 100644
+--- a/code/test/Makefile
++++ b/code/test/Makefile
+@@ -112,7 +112,7 @@ ifeq ($(hosttype),unknown)
+ PROGRAMS = unknownhost
+ else
+ # change this if you create a new test program!
+-PROGRAMS = randomnumber help ascii teststring ReadPrintInt testchar createfile add halt shell matmult sort segments
++PROGRAMS = ping pong scheduler randomnumber help ascii teststring ReadPrintInt testchar createfile add halt shell matmult sort segments
+ 
+ endif
+ 
+@@ -128,6 +128,24 @@ halt: halt.o start.o
+ 	$(COFF2NOFF) halt.coff halt
+ 
+ # These program below are used to test the system call
++scheduler.o: scheduler.c
++	$(CC) $(CFLAGS) -c scheduler.c
++scheduler: scheduler.o start.o
++	$(LD) $(LDFLAGS) start.o scheduler.o -o scheduler.coff
++	$(COFF2NOFF) scheduler.coff scheduler
++
++ping.o: ping.c
++	$(CC) $(CFLAGS) -c ping.c
++ping: ping.o start.o
++	$(LD) $(LDFLAGS) start.o ping.o -o ping.coff
++	$(COFF2NOFF) ping.coff ping
++
++pong.o: pong.c
++	$(CC) $(CFLAGS) -c pong.c
++pong: pong.o start.o
++	$(LD) $(LDFLAGS) start.o pong.o -o pong.coff
++	$(COFF2NOFF) pong.coff pong
++
+ teststring.o: teststring.c
+ 	$(CC) $(CFLAGS) -c teststring.c
+ teststring: teststring.o start.o
+diff --git a/code/test/ping b/code/test/ping
+new file mode 100644
+index 0000000..d7c1863
+Binary files /dev/null and b/code/test/ping differ
+diff --git a/code/test/ping.c b/code/test/ping.c
+new file mode 100644
+index 0000000..624429b
+--- /dev/null
++++ b/code/test/ping.c
+@@ -0,0 +1,8 @@
++#include "syscall.h"
++
++int main()
++{
++    int i;
++    for (i = 0; i < 1000; ++i)
++        PrintChar('A');
++}
+diff --git a/code/test/pong b/code/test/pong
+new file mode 100644
+index 0000000..29303fa
+Binary files /dev/null and b/code/test/pong differ
+diff --git a/code/test/pong.c b/code/test/pong.c
+new file mode 100644
+index 0000000..6dc33bd
+--- /dev/null
++++ b/code/test/pong.c
+@@ -0,0 +1,8 @@
++#include "syscall.h"
++
++int main()
++{
++    int i;
++    for (i = 0; i < 1000; ++i)
++        PrintChar('B');
++}
+diff --git a/code/test/scheduler b/code/test/scheduler
+new file mode 100644
+index 0000000..df11fdc
+Binary files /dev/null and b/code/test/scheduler differ
+diff --git a/code/test/scheduler.c b/code/test/scheduler.c
+new file mode 100644
+index 0000000..ea027ee
+--- /dev/null
++++ b/code/test/scheduler.c
+@@ -0,0 +1,9 @@
++#include "syscall.h"
++
++int main()
++{
++    int pingId, pongId;
++    PrintString("Ping-Pong program is running ...\n");
++    pingId = Exec("./ping");
++    pongId = Exec("./pong");
++}
+\ No newline at end of file
+diff --git a/code/test/teststring b/code/test/teststring
+index e6b05fe..1439dea 100644
+Binary files a/code/test/teststring and b/code/test/teststring differ
+diff --git a/code/threads/main.cc b/code/threads/main.cc
+index 1c9a84d..fe51983 100644
+--- a/code/threads/main.cc
++++ b/code/threads/main.cc
+@@ -1,6 +1,6 @@
+-// main.cc 
+-//	Driver code to initialize, selftest, and run the 
+-//	operating system kernel.  
++// main.cc
++//	Driver code to initialize, selftest, and run the
++//	operating system kernel.
+ //
+ // Usage: nachos -d <debugflags> -rs <random seed #>
+ //              -s -x <nachos file> -ci <consoleIn> -co <consoleOut>
+@@ -28,13 +28,13 @@
+ //    -p prints a Nachos file to stdout
+ //    -r removes a Nachos file from the file system
+ //    -l lists the contents of the Nachos directory
+-//    -D prints the contents of the entire file system 
++//    -D prints the contents of the entire file system
+ //
+ //  Note: the file system flags are not used if the stub filesystem
+ //        is being used
+ //
+ // Copyright (c) 1992-1996 The Regents of the University of California.
+-// All rights reserved.  See copyright.h for copyright notice and limitation 
++// All rights reserved.  See copyright.h for copyright notice and limitation
+ // of liability and disclaimer of warranty provisions.
+ 
+ #define MAIN
+@@ -50,17 +50,16 @@
+ Kernel *kernel;
+ Debug *debug;
+ 
+-
+ //----------------------------------------------------------------------
+ // Cleanup
+ //	Delete kernel data structures; called when user hits "ctl-C".
+ //----------------------------------------------------------------------
+ 
+-static void 
+-Cleanup(int x) 
+-{     
++static void
++Cleanup(int x)
++{
+     cerr << "\nCleaning up after signal " << x << "\n";
+-    delete kernel; 
++    delete kernel;
+ }
+ 
+ //-------------------------------------------------------------------
+@@ -70,7 +69,6 @@ Cleanup(int x)
+ //-------------------------------------------------------------------
+ static const int TransferSize = 128;
+ 
+-
+ #ifndef FILESYS_STUB
+ //----------------------------------------------------------------------
+ // Copy
+@@ -81,39 +79,41 @@ static void
+ Copy(char *from, char *to)
+ {
+     int fd;
+-    OpenFile* openFile;
++    OpenFile *openFile;
+     int amountRead, fileLength;
+     char *buffer;
+ 
+-// Open UNIX file
+-    if ((fd = OpenForReadWrite(from,FALSE)) < 0) {       
++    // Open UNIX file
++    if ((fd = OpenForReadWrite(from, FALSE)) < 0)
++    {
+         printf("Copy: couldn't open input file %s\n", from);
+         return;
+     }
+ 
+-// Figure out length of UNIX file
+-    Lseek(fd, 0, 2);            
++    // Figure out length of UNIX file
++    Lseek(fd, 0, 2);
+     fileLength = Tell(fd);
+     Lseek(fd, 0, 0);
+ 
+-// Create a Nachos file of the same length
+-    DEBUG('f', "Copying file " << from << " of size " << fileLength <<  " to file " << to);
+-    if (!kernel->fileSystem->Create(to, fileLength)) {   // Create Nachos file
++    // Create a Nachos file of the same length
++    DEBUG('f', "Copying file " << from << " of size " << fileLength << " to file " << to);
++    if (!kernel->fileSystem->Create(to, fileLength))
++    { // Create Nachos file
+         printf("Copy: couldn't create output file %s\n", to);
+         Close(fd);
+         return;
+     }
+-    
++
+     openFile = kernel->fileSystem->Open(to);
+     ASSERT(openFile != NULL);
+-    
+-// Copy the data in TransferSize chunks
++
++    // Copy the data in TransferSize chunks
+     buffer = new char[TransferSize];
+-    while ((amountRead=ReadPartial(fd, buffer, sizeof(char)*TransferSize)) > 0)
+-        openFile->Write(buffer, amountRead);    
+-    delete [] buffer;
++    while ((amountRead = ReadPartial(fd, buffer, sizeof(char) * TransferSize)) > 0)
++        openFile->Write(buffer, amountRead);
++    delete[] buffer;
+ 
+-// Close the UNIX and the Nachos files
++    // Close the UNIX and the Nachos files
+     delete openFile;
+     Close(fd);
+ }
+@@ -125,57 +125,54 @@ Copy(char *from, char *to)
+ //      Print the contents of the Nachos file "name".
+ //----------------------------------------------------------------------
+ 
+-void
+-Print(char *name)
++void Print(char *name)
+ {
+-    OpenFile *openFile;    
++    OpenFile *openFile;
+     int i, amountRead;
+     char *buffer;
+ 
+-    if ((openFile = kernel->fileSystem->Open(name)) == NULL) {
++    if ((openFile = kernel->fileSystem->Open(name)) == NULL)
++    {
+         printf("Print: unable to open file %s\n", name);
+         return;
+     }
+-    
++
+     buffer = new char[TransferSize];
+     while ((amountRead = openFile->Read(buffer, TransferSize)) > 0)
+         for (i = 0; i < amountRead; i++)
+             printf("%c", buffer[i]);
+-    delete [] buffer;
++    delete[] buffer;
+ 
+-    delete openFile;            // close the Nachos file
++    delete openFile; // close the Nachos file
+     return;
+ }
+ 
+-
+-
+ //----------------------------------------------------------------------
+ // main
+-// 	Bootstrap the operating system kernel.  
+-//	
++// 	Bootstrap the operating system kernel.
++//
+ //	Initialize kernel data structures
+ //	Call some test routines
+ //	Call "Run" to start an initial user program running
+ //
+ //	"argc" is the number of command line arguments (including the name
+-//		of the command) -- ex: "nachos -d +" -> argc = 3 
++//		of the command) -- ex: "nachos -d +" -> argc = 3
+ //	"argv" is an array of strings, one for each command line argument
+ //		ex: "nachos -d +" -> argv = {"nachos", "-d", "+"}
+ //----------------------------------------------------------------------
+ 
+-int
+-main(int argc, char **argv)
++int main(int argc, char **argv)
+ {
+     int i;
+     char *debugArg = "";
+-    char *userProgName = NULL;        // default is not to execute a user prog
++    char *userProgName = NULL; // default is not to execute a user prog
+     bool threadTestFlag = false;
+     bool consoleTestFlag = false;
+     bool networkTestFlag = false;
+ #ifndef FILESYS_STUB
+-    char *copyUnixFileName = NULL;    // UNIX file to be copied into Nachos
+-    char *copyNachosFileName = NULL;  // name of copied file in Nachos
+-    char *printFileName = NULL; 
++    char *copyUnixFileName = NULL;   // UNIX file to be copied into Nachos
++    char *copyNachosFileName = NULL; // name of copied file in Nachos
++    char *printFileName = NULL;
+     char *removeFileName = NULL;
+     bool dirListFlag = false;
+     bool dumpFlag = false;
+@@ -184,113 +181,135 @@ main(int argc, char **argv)
+     // some command line arguments are handled here.
+     // those that set kernel parameters are handled in
+     // the Kernel constructor
+-    for (i = 1; i < argc; i++) {
+-        if (strcmp(argv[i], "-d") == 0) {
+-	    ASSERT(i + 1 < argc);   // next argument is debug string
++    for (i = 1; i < argc; i++)
++    {
++        if (strcmp(argv[i], "-d") == 0)
++        {
++            ASSERT(i + 1 < argc); // next argument is debug string
+             debugArg = argv[i + 1];
+-	    i++;
+-	}
+-	else if (strcmp(argv[i], "-z") == 0) {
++            i++;
++        }
++        else if (strcmp(argv[i], "-z") == 0)
++        {
+             cout << copyright << "\n";
+-	}
+-	else if (strcmp(argv[i], "-x") == 0) {
+-	    ASSERT(i + 1 < argc);
+-	    userProgName = argv[i + 1];
+-	    i++;
+-	}
+-	else if (strcmp(argv[i], "-K") == 0) {
+-	    threadTestFlag = TRUE;
+-	}
+-	else if (strcmp(argv[i], "-C") == 0) {
+-	    consoleTestFlag = TRUE;
+-	}
+-	else if (strcmp(argv[i], "-N") == 0) {
+-	    networkTestFlag = TRUE;
+-	}
++        }
++        else if (strcmp(argv[i], "-x") == 0)
++        {
++            ASSERT(i + 1 < argc);
++            userProgName = argv[i + 1];
++            i++;
++        }
++        else if (strcmp(argv[i], "-K") == 0)
++        {
++            threadTestFlag = TRUE;
++        }
++        else if (strcmp(argv[i], "-C") == 0)
++        {
++            consoleTestFlag = TRUE;
++        }
++        else if (strcmp(argv[i], "-N") == 0)
++        {
++            networkTestFlag = TRUE;
++        }
+ #ifndef FILESYS_STUB
+-	else if (strcmp(argv[i], "-cp") == 0) {
+-	    ASSERT(i + 2 < argc);
+-	    copyUnixFileName = argv[i + 1];
+-	    copyNachosFileName = argv[i + 2];
+-	    i += 2;
+-	}
+-	else if (strcmp(argv[i], "-p") == 0) {
+-	    ASSERT(i + 1 < argc);
+-	    printFileName = argv[i + 1];
+-	    i++;
+-	}
+-	else if (strcmp(argv[i], "-r") == 0) {
+-	    ASSERT(i + 1 < argc);
+-	    removeFileName = argv[i + 1];
+-	    i++;
+-	}
+-	else if (strcmp(argv[i], "-l") == 0) {
+-	    dirListFlag = true;
+-	}
+-	else if (strcmp(argv[i], "-D") == 0) {
+-	    dumpFlag = true;
+-	}
++        else if (strcmp(argv[i], "-cp") == 0)
++        {
++            ASSERT(i + 2 < argc);
++            copyUnixFileName = argv[i + 1];
++            copyNachosFileName = argv[i + 2];
++            i += 2;
++        }
++        else if (strcmp(argv[i], "-p") == 0)
++        {
++            ASSERT(i + 1 < argc);
++            printFileName = argv[i + 1];
++            i++;
++        }
++        else if (strcmp(argv[i], "-r") == 0)
++        {
++            ASSERT(i + 1 < argc);
++            removeFileName = argv[i + 1];
++            i++;
++        }
++        else if (strcmp(argv[i], "-l") == 0)
++        {
++            dirListFlag = true;
++        }
++        else if (strcmp(argv[i], "-D") == 0)
++        {
++            dumpFlag = true;
++        }
+ #endif //FILESYS_STUB
+-	else if (strcmp(argv[i], "-u") == 0) {
++        else if (strcmp(argv[i], "-u") == 0)
++        {
+             cout << "Partial usage: nachos [-z -d debugFlags]\n";
+             cout << "Partial usage: nachos [-x programName]\n";
+-	    cout << "Partial usage: nachos [-K] [-C] [-N]\n";
++            cout << "Partial usage: nachos [-K] [-C] [-N]\n";
+ #ifndef FILESYS_STUB
+             cout << "Partial usage: nachos [-cp UnixFile NachosFile]\n";
+             cout << "Partial usage: nachos [-p fileName] [-r fileName]\n";
+             cout << "Partial usage: nachos [-l] [-D]\n";
+ #endif //FILESYS_STUB
+-	}
+-
++        }
+     }
+     debug = new Debug(debugArg);
+-    
++
+     DEBUG(dbgThread, "Entering main");
+ 
+     kernel = new Kernel(argc, argv);
+ 
+     kernel->Initialize();
+ 
+-    CallOnUserAbort(Cleanup);		// if user hits ctl-C
++    CallOnUserAbort(Cleanup); // if user hits ctl-C
+ 
+     // at this point, the kernel is ready to do something
+     // run some tests, if requested
+-    if (threadTestFlag) {
+-      kernel->ThreadSelfTest();  // test threads and synchronization
++    if (threadTestFlag)
++    {
++        kernel->ThreadSelfTest(); // test threads and synchronization
+     }
+-    if (consoleTestFlag) {
+-      kernel->ConsoleTest();   // interactive test of the synchronized console
++    if (consoleTestFlag)
++    {
++        kernel->ConsoleTest(); // interactive test of the synchronized console
+     }
+-    if (networkTestFlag) {
+-      kernel->NetworkTest();   // two-machine test of the network
++    if (networkTestFlag)
++    {
++        kernel->NetworkTest(); // two-machine test of the network
+     }
+ 
+ #ifndef FILESYS_STUB
+-    if (removeFileName != NULL) {
+-      kernel->fileSystem->Remove(removeFileName);
++    if (removeFileName != NULL)
++    {
++        kernel->fileSystem->Remove(removeFileName);
+     }
+-    if (copyUnixFileName != NULL && copyNachosFileName != NULL) {
+-      Copy(copyUnixFileName,copyNachosFileName);
++    if (copyUnixFileName != NULL && copyNachosFileName != NULL)
++    {
++        Copy(copyUnixFileName, copyNachosFileName);
+     }
+-    if (dumpFlag) {
+-      kernel->fileSystem->Print();
++    if (dumpFlag)
++    {
++        kernel->fileSystem->Print();
+     }
+-    if (dirListFlag) {
+-      kernel->fileSystem->List();
++    if (dirListFlag)
++    {
++        kernel->fileSystem->List();
+     }
+-    if (printFileName != NULL) {
+-      Print(printFileName);
++    if (printFileName != NULL)
++    {
++        Print(printFileName);
+     }
+ #endif // FILESYS_STUB
+ 
+     // finally, run an initial user program if requested to do so
+-    if (userProgName != NULL) {
+-      AddrSpace *space = new AddrSpace;
+-      ASSERT(space != (AddrSpace *)NULL);
+-      if (space->Load(userProgName)) {  // load the program into the space
+-	space->Execute();              // run the program
+-	ASSERTNOTREACHED();            // Execute never returns
+-      }
++    if (userProgName != NULL)
++    {
++        AddrSpace *space = new AddrSpace;
++        ASSERT(space != (AddrSpace *)NULL);
++        if (space->Load(userProgName))
++        {                       // load the program into the space
++            space->Execute();   // run the program
++            ASSERTNOTREACHED(); // Execute never returns
++        }
+     }
+ 
+     // If we don't run a user program, we may get here.
+@@ -298,7 +317,6 @@ main(int argc, char **argv)
+     // Instead, call Halt, which will first clean up, then
+     //  terminate.
+     kernel->interrupt->Halt();
+-    
++
+     ASSERTNOTREACHED();
+ }
+-
+diff --git a/code/threads/scheduler.cc b/code/threads/scheduler.cc
+index 10ebd8b..d9e9037 100644
+--- a/code/threads/scheduler.cc
++++ b/code/threads/scheduler.cc
+@@ -77,7 +77,7 @@ Scheduler::FindNextToRun ()
+     ASSERT(kernel->interrupt->getLevel() == IntOff);
+ 
+     if (readyList->IsEmpty()) {
+-	return NULL;
++	    return NULL;
+     } else {
+     	return readyList->RemoveFront();
+     }
+@@ -108,13 +108,13 @@ Scheduler::Run (Thread *nextThread, bool finishing)
+     ASSERT(kernel->interrupt->getLevel() == IntOff);
+ 
+     if (finishing) {	// mark that we need to delete current thread
+-         ASSERT(toBeDestroyed == NULL);
+-	 toBeDestroyed = oldThread;
++        ASSERT(toBeDestroyed == NULL);
++	    toBeDestroyed = oldThread;
+     }
+     
+     if (oldThread->space != NULL) {	// if this thread is a user program,
+         oldThread->SaveUserState(); 	// save the user's CPU registers
+-	oldThread->space->SaveState();
++	    oldThread->space->SaveState();
+     }
+     
+     oldThread->CheckOverflow();		    // check if the old thread
+@@ -145,7 +145,7 @@ Scheduler::Run (Thread *nextThread, bool finishing)
+     
+     if (oldThread->space != NULL) {	    // if there is an address space
+         oldThread->RestoreUserState();     // to restore, do it.
+-	oldThread->space->RestoreState();
++	    oldThread->space->RestoreState();
+     }
+ }
+ 
+@@ -162,7 +162,7 @@ Scheduler::CheckToBeDestroyed()
+ {
+     if (toBeDestroyed != NULL) {
+         delete toBeDestroyed;
+-	toBeDestroyed = NULL;
++	    toBeDestroyed = NULL;
+     }
+ }
+  
+diff --git a/code/threads/thread.cc b/code/threads/thread.cc
+index b641d0d..30786ca 100644
+--- a/code/threads/thread.cc
++++ b/code/threads/thread.cc
+@@ -24,6 +24,7 @@
+ 
+ // this is put at the top of the execution stack, for detecting stack overflows
+ const int STACK_FENCEPOST = 0xdedbeef;
++// int numThreads = 0;
+ 
+ //----------------------------------------------------------------------
+ // Thread::Thread
+@@ -35,7 +36,12 @@ const int STACK_FENCEPOST = 0xdedbeef;
+ 
+ Thread::Thread(char* threadName)
+ {
+-    name = threadName;
++    // name = threadName;
++    int length = 0;
++    while (threadName[length++] != 0);
++    name = new char[length+1];
++    strcpy(name, threadName);
++
+     stackTop = NULL;
+     stack = NULL;
+     status = JUST_CREATED;
+@@ -65,7 +71,9 @@ Thread::~Thread()
+ 
+     ASSERT(this != kernel->currentThread);
+     if (stack != NULL)
+-	DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
++	    DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
++    if (name != NULL)
++        delete[] name;
+ }
+ 
+ //----------------------------------------------------------------------
+@@ -171,11 +179,11 @@ Thread::Begin ()
+ void
+ Thread::Finish ()
+ {
+-    (void) kernel->interrupt->SetLevel(IntOff);		
++    (void) kernel->interrupt->SetLevel(IntOff);		   
+     ASSERT(this == kernel->currentThread);
+     
+     DEBUG(dbgThread, "Finishing thread: " << name);
+-    
++
+     Sleep(TRUE);				// invokes SWITCH
+     // not reached
+ }
+@@ -210,8 +218,8 @@ Thread::Yield ()
+     
+     nextThread = kernel->scheduler->FindNextToRun();
+     if (nextThread != NULL) {
+-	kernel->scheduler->ReadyToRun(this);
+-	kernel->scheduler->Run(nextThread, FALSE);
++	    kernel->scheduler->ReadyToRun(this);
++	    kernel->scheduler->Run(nextThread, FALSE);
+     }
+     (void) kernel->interrupt->SetLevel(oldLevel);
+ }
+@@ -236,20 +244,19 @@ Thread::Yield ()
+ //	so that there can't be a time slice between pulling the first thread
+ //	off the ready list, and switching to it.
+ //----------------------------------------------------------------------
+-void
+-Thread::Sleep (bool finishing)
+-{
++void Thread::Sleep (bool finishing) {
+     Thread *nextThread;
+-    
++
+     ASSERT(this == kernel->currentThread);
+     ASSERT(kernel->interrupt->getLevel() == IntOff);
+-    
++
+     DEBUG(dbgThread, "Sleeping thread: " << name);
+ 
+     status = BLOCKED;
+-    while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
+-	kernel->interrupt->Idle();	// no one to run, wait for an interrupt
+-    
++    while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL) {
++        kernel->interrupt->Idle();	// no one to run, wait for an interrupt
++    }
++
+     // returns when it's time for us to run
+     kernel->scheduler->Run(nextThread, finishing); 
+ }
+@@ -376,7 +383,7 @@ void
+ Thread::SaveUserState()
+ {
+     for (int i = 0; i < NumTotalRegs; i++)
+-	userRegisters[i] = kernel->machine->ReadRegister(i);
++	    userRegisters[i] = kernel->machine->ReadRegister(i);
+ }
+ 
+ //----------------------------------------------------------------------
+@@ -392,7 +399,7 @@ void
+ Thread::RestoreUserState()
+ {
+     for (int i = 0; i < NumTotalRegs; i++)
+-	kernel->machine->WriteRegister(i, userRegisters[i]);
++	    kernel->machine->WriteRegister(i, userRegisters[i]);
+ }
+ 
+ 
+@@ -411,7 +418,7 @@ SimpleThread(int which)
+     int num;
+     
+     for (num = 0; num < 5; num++) {
+-	cout << "*** thread " << which << " looped " << num << " times\n";
++	    cout << "*** thread " << which << " looped " << num << " times\n";
+         kernel->currentThread->Yield();
+     }
+ }
+@@ -433,4 +440,3 @@ Thread::SelfTest()
+     kernel->currentThread->Yield();
+     SimpleThread(0);
+ }
+-
+diff --git a/code/threads/thread.h b/code/threads/thread.h
+index bfb17ae..43976c8 100644
+--- a/code/threads/thread.h
++++ b/code/threads/thread.h
+@@ -104,8 +104,10 @@ class Thread {
+     char* getName() { return (name); }
+     void Print() { cout << name; }
+     void SelfTest();		// test whether thread impl is working
++    void MyExec(char *userProgName);
++	int pId;
+ 
+-  private:
++private:
+     // some of the private data for this class is listed above
+     
+     int *stack; 	 	// Bottom of the stack 
+diff --git a/code/userprog/addrspace.cc b/code/userprog/addrspace.cc
+index 47ca2b5..387606d 100644
+--- a/code/userprog/addrspace.cc
++++ b/code/userprog/addrspace.cc
+@@ -1,9 +1,9 @@
+-// addrspace.cc 
++// addrspace.cc
+ //	Routines to manage address spaces (executing user programs).
+ //
+ //	In order to run a user program, you must:
+ //
+-//	1. link with the -n -T 0 option 
++//	1. link with the -n -T 0 option
+ //	2. run coff2noff to convert the object file to Nachos format
+ //		(Nachos object code format is essentially just a simpler
+ //		version of the UNIX executable object code format)
+@@ -12,7 +12,7 @@
+ //		don't need to do this last step)
+ //
+ // Copyright (c) 1992-1996 The Regents of the University of California.
+-// All rights reserved.  See copyright.h for copyright notice and limitation 
++// All rights reserved.  See copyright.h for copyright notice and limitation
+ // of liability and disclaimer of warranty provisions.
+ 
+ #include "copyright.h"
+@@ -21,15 +21,17 @@
+ #include "machine.h"
+ #include "noff.h"
+ 
++int AddrSpace::numFreePages = NumPhysPages;
++bool AddrSpace::phyPageStatus[NumPhysPages] = {FALSE};
++
+ //----------------------------------------------------------------------
+ // SwapHeader
+-// 	Do little endian to big endian conversion on the bytes in the 
++// 	Do little endian to big endian conversion on the bytes in the
+ //	object file header, in case the file was generated on a little
+ //	endian machine, and we're now running on a big endian machine.
+ //----------------------------------------------------------------------
+ 
+-static void 
+-SwapHeader (NoffHeader *noffH)
++static void SwapHeader(NoffHeader *noffH)
+ {
+     noffH->noffMagic = WordToHost(noffH->noffMagic);
+     noffH->code.size = WordToHost(noffH->code.size);
+@@ -37,11 +39,9 @@ SwapHeader (NoffHeader *noffH)
+     noffH->code.inFileAddr = WordToHost(noffH->code.inFileAddr);
+ #ifdef RDATA
+     noffH->readonlyData.size = WordToHost(noffH->readonlyData.size);
+-    noffH->readonlyData.virtualAddr = 
+-           WordToHost(noffH->readonlyData.virtualAddr);
+-    noffH->readonlyData.inFileAddr = 
+-           WordToHost(noffH->readonlyData.inFileAddr);
+-#endif 
++    noffH->readonlyData.virtualAddr = WordToHost(noffH->readonlyData.virtualAddr);
++    noffH->readonlyData.inFileAddr = WordToHost(noffH->readonlyData.inFileAddr);
++#endif
+     noffH->initData.size = WordToHost(noffH->initData.size);
+     noffH->initData.virtualAddr = WordToHost(noffH->initData.virtualAddr);
+     noffH->initData.inFileAddr = WordToHost(noffH->initData.inFileAddr);
+@@ -50,17 +50,14 @@ SwapHeader (NoffHeader *noffH)
+     noffH->uninitData.inFileAddr = WordToHost(noffH->uninitData.inFileAddr);
+ 
+ #ifdef RDATA
+-    DEBUG(dbgAddr, "code = " << noffH->code.size <<  
+-                   " readonly = " << noffH->readonlyData.size <<
+-                   " init = " << noffH->initData.size <<
+-                   " uninit = " << noffH->uninitData.size << "\n");
++    DEBUG(dbgAddr, "code = " << noffH->code.size << " readonly = " << noffH->readonlyData.size << " init = " << noffH->initData.size << " uninit = " << noffH->uninitData.size << "\n");
+ #endif
+ }
+ 
+ //----------------------------------------------------------------------
+ // AddrSpace::AddrSpace
+ // 	Create an address space to run a user program.
+-//	Set up the translation from program memory to physical 
++//	Set up the translation from program memory to physical
+ //	memory.  For now, this is really simple (1:1), since we are
+ //	only uniprogramming, and we have a single unsegmented page table
+ //----------------------------------------------------------------------
+@@ -68,19 +65,22 @@ SwapHeader (NoffHeader *noffH)
+ AddrSpace::AddrSpace()
+ {
+     pageTable = new TranslationEntry[NumPhysPages];
+-    for (int i = 0; i < NumPhysPages; i++) {
+-	pageTable[i].virtualPage = i;	// for now, virt page # = phys page #
+-	pageTable[i].physicalPage = i;
+-	pageTable[i].valid = TRUE;
+-	pageTable[i].use = FALSE;
+-	pageTable[i].dirty = FALSE;
+-	pageTable[i].readOnly = FALSE;  
++    for (int i = 0; i < NumPhysPages; i++)
++    {
++        pageTable[i].virtualPage = i; // for now, virt page # = phys page #
++        pageTable[i].physicalPage = i;
++        pageTable[i].valid = TRUE;
++        pageTable[i].use = FALSE;
++        pageTable[i].dirty = FALSE;
++        pageTable[i].readOnly = FALSE;
+     }
+-    
++
+     // zero out the entire address space
+-    bzero(kernel->machine->mainMemory, MemorySize);
++    // bzero(kernel->machine->mainMemory, MemorySize);
+ }
+ 
++// AddrSpace::AddrSpace(OpenFile *executable) {}
++
+ //----------------------------------------------------------------------
+ // AddrSpace::~AddrSpace
+ // 	Dealloate an address space.
+@@ -88,10 +88,14 @@ AddrSpace::AddrSpace()
+ 
+ AddrSpace::~AddrSpace()
+ {
+-   delete pageTable;
++    for (int i = 0; i < numPages; i++)
++    {
++        AddrSpace::phyPageStatus[pageTable[i].physicalPage] = FALSE;
++        AddrSpace::numFreePages++;
++    }
++    delete[] pageTable;
+ }
+ 
+-
+ //----------------------------------------------------------------------
+ // AddrSpace::Load
+ // 	Load a user program into memory from a file.
+@@ -102,75 +106,96 @@ AddrSpace::~AddrSpace()
+ //	"fileName" is the file containing the object code to load into memory
+ //----------------------------------------------------------------------
+ 
+-bool 
+-AddrSpace::Load(char *fileName) 
++bool AddrSpace::Load(char *fileName)
+ {
+     OpenFile *executable = kernel->fileSystem->Open(fileName);
+     NoffHeader noffH;
+     unsigned int size;
+ 
+-    if (executable == NULL) {
+-	cerr << "Unable to open file " << fileName << "\n";
+-	return FALSE;
++    if (executable == NULL)
++    {
++        cerr << "Unable to open file " << fileName << "\n";
++        return FALSE;
+     }
+ 
+     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+-    if ((noffH.noffMagic != NOFFMAGIC) && 
+-		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
+-    	SwapHeader(&noffH);
++    if ((noffH.noffMagic != NOFFMAGIC) && (WordToHost(noffH.noffMagic) == NOFFMAGIC))
++        SwapHeader(&noffH);
++
+     ASSERT(noffH.noffMagic == NOFFMAGIC);
+ 
+ #ifdef RDATA
+-// how big is address space?
++    // how big is address space?
+     size = noffH.code.size + noffH.readonlyData.size + noffH.initData.size +
+-           noffH.uninitData.size + UserStackSize;	
+-                                                // we need to increase the size
+-						// to leave room for the stack
++           noffH.uninitData.size + UserStackSize;
++    // we need to increase the size
++    // to leave room for the stack
+ #else
+-// how big is address space?
+-    size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
+-			+ UserStackSize;	// we need to increase the size
+-						// to leave room for the stack
++    // how big is address space?
++    size = noffH.code.size + noffH.initData.size + noffH.uninitData.size + UserStackSize; // we need to increase the size
++                                                                                          // to leave room for the stack
+ #endif
+     numPages = divRoundUp(size, PageSize);
+     size = numPages * PageSize;
+ 
+-    ASSERT(numPages <= NumPhysPages);		// check we're not trying
+-						// to run anything too big --
+-						// at least until we have
+-						// virtual memory
++    ASSERT(numPages <= AddrSpace::numFreePages); // check we're not trying
++                                                 // to run anything too big --
++                                                 // at least until we have
++                                                 // virtual memory
++    if (pageTable)
++        delete[] pageTable;
++
++    pageTable = new TranslationEntry[numPages];
++    for (unsigned int i = 0, idx = 0; i < numPages; i++) {
++        pageTable[i].virtualPage = i;
++        while (idx < NumPhysPages && AddrSpace::phyPageStatus[idx] == TRUE)
++            idx++;
++
++        AddrSpace::phyPageStatus[idx] = TRUE;
++        AddrSpace::numFreePages--;
++
++        bzero(&kernel->machine->mainMemory[idx * PageSize], PageSize);
++        pageTable[i].physicalPage = idx;
++        pageTable[i].valid = TRUE;
++        pageTable[i].use = FALSE;
++        pageTable[i].dirty = FALSE;
++        pageTable[i].readOnly = FALSE;
++    }
+ 
+     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
+ 
+-// then, copy in the code and data segments into memory
+-// Note: this code assumes that virtual address = physical address
+-    if (noffH.code.size > 0) {
++    // then, copy in the code and data segments into memory
++    // Note: this code assumes that virtual address = physical address
++    if (noffH.code.size > 0)
++    {
+         DEBUG(dbgAddr, "Initializing code segment.");
+-	DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
++        DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
+         executable->ReadAt(
+-		&(kernel->machine->mainMemory[noffH.code.virtualAddr]), 
+-			noffH.code.size, noffH.code.inFileAddr);
++            &(kernel->machine->mainMemory[pageTable[noffH.code.virtualAddr / PageSize].physicalPage * PageSize + (noffH.code.virtualAddr % PageSize)]),
++            noffH.code.size, noffH.code.inFileAddr);
+     }
+-    if (noffH.initData.size > 0) {
++    if (noffH.initData.size > 0)
++    {
+         DEBUG(dbgAddr, "Initializing data segment.");
+-	DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
++        DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
+         executable->ReadAt(
+-		&(kernel->machine->mainMemory[noffH.initData.virtualAddr]),
+-			noffH.initData.size, noffH.initData.inFileAddr);
++            &(kernel->machine->mainMemory[pageTable[noffH.initData.virtualAddr / PageSize].physicalPage * PageSize + (noffH.code.virtualAddr % PageSize)]),
++            noffH.initData.size, noffH.initData.inFileAddr);
+     }
+ 
+ #ifdef RDATA
+-    if (noffH.readonlyData.size > 0) {
++    if (noffH.readonlyData.size > 0)
++    {
+         DEBUG(dbgAddr, "Initializing read only data segment.");
+-	DEBUG(dbgAddr, noffH.readonlyData.virtualAddr << ", " << noffH.readonlyData.size);
++        DEBUG(dbgAddr, noffH.readonlyData.virtualAddr << ", " << noffH.readonlyData.size);
+         executable->ReadAt(
+-		&(kernel->machine->mainMemory[noffH.readonlyData.virtualAddr]),
+-			noffH.readonlyData.size, noffH.readonlyData.inFileAddr);
++            &(kernel->machine->mainMemory[noffH.readonlyData.virtualAddr]),
++            noffH.readonlyData.size, noffH.readonlyData.inFileAddr);
+     }
+ #endif
+ 
+-    delete executable;			// close file
+-    return TRUE;			// success
++    delete executable; // close file
++    return TRUE;       // success
+ }
+ 
+ //----------------------------------------------------------------------
+@@ -182,23 +207,21 @@ AddrSpace::Load(char *fileName)
+ //
+ //----------------------------------------------------------------------
+ 
+-void 
+-AddrSpace::Execute() 
++void AddrSpace::Execute()
+ {
+ 
+     kernel->currentThread->space = this;
+ 
+-    this->InitRegisters();		// set the initial register values
+-    this->RestoreState();		// load page table register
++    this->InitRegisters(); // set the initial register values
++    this->RestoreState();  // load page table register
+ 
+-    kernel->machine->Run();		// jump to the user progam
++    kernel->machine->Run(); // jump to the user progam
+ 
+-    ASSERTNOTREACHED();			// machine->Run never returns;
+-					// the address space exits
+-					// by doing the syscall "exit"
++    ASSERTNOTREACHED(); // machine->Run never returns;
++                        // the address space exits
++                        // by doing the syscall "exit"
+ }
+ 
+-
+ //----------------------------------------------------------------------
+ // AddrSpace::InitRegisters
+ // 	Set the initial values for the user-level register set.
+@@ -209,18 +232,17 @@ AddrSpace::Execute()
+ //	when this thread is context switched out.
+ //----------------------------------------------------------------------
+ 
+-void
+-AddrSpace::InitRegisters()
++void AddrSpace::InitRegisters()
+ {
+     Machine *machine = kernel->machine;
+     int i;
+ 
+     for (i = 0; i < NumTotalRegs; i++)
+-	machine->WriteRegister(i, 0);
++        machine->WriteRegister(i, 0);
+ 
+     // Initial program counter -- must be location of "Start", which
+     //  is assumed to be virtual address zero
+-    machine->WriteRegister(PCReg, 0);	
++    machine->WriteRegister(PCReg, 0);
+ 
+     // Need to also tell MIPS where next instruction is, because
+     // of branch delay possibility
+@@ -228,9 +250,9 @@ AddrSpace::InitRegisters()
+     // after start will be at virtual address four.
+     machine->WriteRegister(NextPCReg, 4);
+ 
+-   // Set the stack register to the end of the address space, where we
+-   // allocated the stack; but subtract off a bit, to make sure we don't
+-   // accidentally reference off the end!
++    // Set the stack register to the end of the address space, where we
++    // allocated the stack; but subtract off a bit, to make sure we don't
++    // accidentally reference off the end!
+     machine->WriteRegister(StackReg, numPages * PageSize - 16);
+     DEBUG(dbgAddr, "Initializing stack pointer: " << numPages * PageSize - 16);
+ }
+@@ -243,8 +265,11 @@ AddrSpace::InitRegisters()
+ //	For now, don't need to save anything!
+ //----------------------------------------------------------------------
+ 
+-void AddrSpace::SaveState() 
+-{}
++void AddrSpace::SaveState()
++{
++    pageTable = kernel->machine->pageTable;
++    numPages = kernel->machine->pageTableSize;
++}
+ 
+ //----------------------------------------------------------------------
+ // AddrSpace::RestoreState
+@@ -254,13 +279,12 @@ void AddrSpace::SaveState()
+ //      For now, tell the machine where to find the page table.
+ //----------------------------------------------------------------------
+ 
+-void AddrSpace::RestoreState() 
++void AddrSpace::RestoreState()
+ {
+     kernel->machine->pageTable = pageTable;
+     kernel->machine->pageTableSize = numPages;
+ }
+ 
+-
+ //----------------------------------------------------------------------
+ // AddrSpace::Translate
+ //  Translate the virtual address in _vaddr_ to a physical address
+@@ -273,17 +297,17 @@ ExceptionType
+ AddrSpace::Translate(unsigned int vaddr, unsigned int *paddr, int isReadWrite)
+ {
+     TranslationEntry *pte;
+-    int               pfn;
+-    unsigned int      vpn    = vaddr / PageSize;
+-    unsigned int      offset = vaddr % PageSize;
++    int pfn;
++    unsigned int vpn = vaddr / PageSize;
++    unsigned int offset = vaddr % PageSize;
+ 
+-    if(vpn >= numPages) {
++    if (vpn >= numPages)
+         return AddressErrorException;
+-    }
+ 
+     pte = &pageTable[vpn];
+ 
+-    if(isReadWrite && pte->readOnly) {
++    if (isReadWrite && pte->readOnly)
++    {
+         return ReadOnlyException;
+     }
+ 
+@@ -291,17 +315,18 @@ AddrSpace::Translate(unsigned int vaddr, unsigned int *paddr, int isReadWrite)
+ 
+     // if the pageFrame is too big, there is something really wrong!
+     // An invalid translation was loaded into the page table or TLB.
+-    if (pfn >= NumPhysPages) {
++    if (pfn >= NumPhysPages)
++    {
+         DEBUG(dbgAddr, "Illegal physical page " << pfn);
+         return BusErrorException;
+     }
+ 
+-    pte->use = TRUE;          // set the use, dirty bits
++    pte->use = TRUE; // set the use, dirty bits
+ 
+-    if(isReadWrite)
++    if (isReadWrite)
+         pte->dirty = TRUE;
+ 
+-    *paddr = pfn*PageSize + offset;
++    *paddr = pfn * PageSize + offset;
+ 
+     ASSERT((*paddr < MemorySize));
+ 
+@@ -310,7 +335,3 @@ AddrSpace::Translate(unsigned int vaddr, unsigned int *paddr, int isReadWrite)
+ 
+     return NoException;
+ }
+-
+-
+-
+-
+diff --git a/code/userprog/addrspace.h b/code/userprog/addrspace.h
+index 914280e..6c0208e 100644
+--- a/code/userprog/addrspace.h
++++ b/code/userprog/addrspace.h
+@@ -19,8 +19,9 @@
+ #define UserStackSize		1024 	// increase this as necessary!
+ 
+ class AddrSpace {
+-  public:
++    public:
+     AddrSpace();			// Create an address space.
++    // AddrSpace(OpenFile *executable);
+     ~AddrSpace();			// De-allocate an address space
+ 
+     bool Load(char *fileName);		// Load a program into addr space from
+@@ -38,8 +39,10 @@ class AddrSpace {
+     // to physical address _paddr_. _mode_
+     // is 0 for Read, 1 for Write.
+     ExceptionType Translate(unsigned int vaddr, unsigned int *paddr, int mode);
+-
+-  private:
++	
++    static bool phyPageStatus[NumPhysPages];
++	static int numFreePages;
++ 	private:
+     TranslationEntry *pageTable;	// Assume linear page table translation
+ 					// for now!
+     unsigned int numPages;		// Number of pages in the virtual 
+diff --git a/code/userprog/exception.cc b/code/userprog/exception.cc
+index 7775bca..726556e 100644
+--- a/code/userprog/exception.cc
++++ b/code/userprog/exception.cc
+@@ -33,6 +33,8 @@
+ #define MAX_CHAR_ARRAY 255
+ #define MaxFileLength 32
+ 
++int numThreads = 0;
++
+ char *User2System(int virtAddr, int limit)
+ {
+ 	int oneChar;
+@@ -102,7 +104,10 @@ void IncreasePC()
+ //
+ //	"which" is the kind of exception.  The list of possible exceptions
+ //	is in machine.h.
+-//----------------------------------------------------------------------
++// ----------------------------------------------------------------------
++void addrSpaceExecute(AddrSpace *space) {
++    space->Execute();   // run the program
++}
+ 
+ void ExceptionHandler(ExceptionType which)
+ {
+@@ -185,11 +190,41 @@ void ExceptionHandler(ExceptionType which)
+ 			ASSERTNOTREACHED();
+ 			break;
+ 		}
++		case SC_Exec:
++		{
++			DEBUG(dbgFile, "\nSC_PrintString");
++
++			DEBUG(dbgFile, "\nReading virtual address of buffer data");
++			int virtAddr = kernel->machine->ReadRegister(4); // first argument
++
++			char *userProgName = User2System(virtAddr, MAX_CHAR_ARRAY);	
++			char buf[255];
++			bzero(buf, 255);
++			sprintf(buf, "p%d", numThreads);
++			Thread *mythread = new Thread(buf);
++			mythread->pId = numThreads++;
++
++			if (userProgName != NULL) {
++				AddrSpace *space = new AddrSpace;
++				ASSERT(space != (AddrSpace *)NULL);
++				mythread->space = space;
++
++				// load the program into the space
++				if (space->Load(userProgName)) {
++					mythread->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)space);
++					kernel->machine->WriteRegister(2, mythread->pId);
++				}
++			}
++
++			delete[] userProgName;
++			IncreasePC();
++			return;
++		}
+ 		case SC_Exit:
+ 		{
+ 			DEBUG(dbgAddr, "Program exit\n");
+ 			int re = kernel->machine->ReadRegister(4);
+-			cout << "Return value" << re << endl;
++			// cout << "Return value" << re << endl;
+ 			kernel->currentThread->Finish();
+ 			break;
+ 		}
+@@ -538,7 +573,7 @@ void ExceptionHandler(ExceptionType which)
+ 			return;
+ 		}
+ 
+-		//End--------------------------------------------
++			//End--------------------------------------------
+ 
+ 		default:
+ 			cerr << "Unexpected system call " << type << "\n";
+diff --git a/code/userprog/noff.h b/code/userprog/noff.h
+index a8b5551..756fc2e 100644
+--- a/code/userprog/noff.h
++++ b/code/userprog/noff.h
+@@ -5,7 +5,8 @@
+  *	code (read-only), initialized data, and unitialized data
+  */
+ 
+-#define NOFFMAGIC	0xbadfad 	/* magic number denoting Nachos 
++#define NOFFMAGIC	0xbadfad 	
++/* magic number denoting Nachos 
+ 					 * object code file 
+ 					 */
+ 
