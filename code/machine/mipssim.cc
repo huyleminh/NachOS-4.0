@@ -21,6 +21,9 @@
 #include "machine.h"
 #include "mipssim.h"
 #include "main.h"
+#include <time.h>
+#include <stdlib.h>
+
 
 static void Mult(int a, int b, bool signedArith, int* hiPtr, int* loPtr);
 
@@ -60,14 +63,19 @@ Machine::Run()
 
     if (debug->IsEnabled('m')) {
         cout << "Starting program in thread: " << kernel->currentThread->getName();
-	cout << ", at time: " << kernel->stats->totalTicks << "\n";
+		cout << ", at time: " << kernel->stats->totalTicks << "\n";
     }
     kernel->interrupt->setStatus(UserMode);
+	
     for (;;) {
         OneInstruction(instr);
-	kernel->interrupt->OneTick();
-	if (singleStep && (runUntilTime <= kernel->stats->totalTicks))
-	  Debugger();
+		
+		kernel->interrupt->OneTick();
+		if (singleStep && (runUntilTime <= kernel->stats->totalTicks))
+	  		Debugger();
+
+		// Our custom code.
+		kernel->currentThread->Yield();
     }
 }
 

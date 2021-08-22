@@ -24,6 +24,7 @@
 
 // this is put at the top of the execution stack, for detecting stack overflows
 const int STACK_FENCEPOST = 0xdedbeef;
+// int numThreads = 0;
 
 //----------------------------------------------------------------------
 // Thread::Thread
@@ -36,6 +37,11 @@ const int STACK_FENCEPOST = 0xdedbeef;
 Thread::Thread(char* threadName)
 {
     name = threadName;
+    int length = 0;
+    while (threadName[length++] != 0);
+    name = new char[length+1];
+    strcpy(name, threadName);
+
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
@@ -65,7 +71,9 @@ Thread::~Thread()
 
     ASSERT(this != kernel->currentThread);
     if (stack != NULL)
-	DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
+	    DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
+    if (name != NULL)
+        delete[] name;
 }
 
 //----------------------------------------------------------------------
@@ -376,7 +384,7 @@ void
 Thread::SaveUserState()
 {
     for (int i = 0; i < NumTotalRegs; i++)
-	userRegisters[i] = kernel->machine->ReadRegister(i);
+	    userRegisters[i] = kernel->machine->ReadRegister(i);
 }
 
 //----------------------------------------------------------------------
@@ -392,7 +400,7 @@ void
 Thread::RestoreUserState()
 {
     for (int i = 0; i < NumTotalRegs; i++)
-	kernel->machine->WriteRegister(i, userRegisters[i]);
+	    kernel->machine->WriteRegister(i, userRegisters[i]);
 }
 
 
@@ -438,18 +446,23 @@ Thread::SelfTest()
 //     space->Execute();   // run the program
 // }
 
-// void Thread::MyExec(char *userProgName) {
-//     AddrSpace *space = new AddrSpace;
-// 	ASSERT(space != (AddrSpace *)NULL);	
+// void Thread::MyExec(char *filename) {
+//     char buf[255];
+// 	bzero(buf, 255);
+// 	sprintf(buf, "p%d", numThreads);
+// 	Thread *mythread = new Thread(buf);
+// 	mythread->pId = numThreads++;
 
-// 	if (userProgName != NULL) {
+//     if (filename != NULL) {
 // 		AddrSpace *space = new AddrSpace;
 // 		ASSERT(space != (AddrSpace *)NULL);
-				
+//         mythread->space = space;
+// 		cout << filename << " - " << mythread->pId << endl;
+
 // 		// load the program into the space
-// 		if (space->Load(userProgName)) {
-// 			this->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)&space);
-// 			kernel->currentThread->Yield();
+// 		if (space->Load(filename)) {
+// 			mythread->Fork((VoidFunctionPtr) addrSpaceExecute, (void *)space);
+// 			// kernel->currentThread->Yield();
 // 		}
 // 	}
 // }
